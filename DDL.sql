@@ -70,7 +70,7 @@ CREATE TABLE patient (
         id		                integer,
         name 		            text,
         dob 		            date	Not Null,
-        phone  		            integer	Not Null Unique,
+        phone  		            text	Not Null Unique,
         address 	            text,
         account_info 	        text,
         balance 	            integer	check (balance >= 0 ),
@@ -89,7 +89,7 @@ CREATE TABLE staff (
         date_of_leave   	date,	/*(null allowed => currently working)*/
         dob 		        date,
         salary 		        integer	check (salary >= 0),
-        phone 		        integer	NOT NULL UNIQUE,
+        phone 		        text	NOT NULL UNIQUE,
         address 	        text,
         slot_name	        text,
         Primary Key(id),
@@ -215,7 +215,7 @@ CREATE TABLE admit (
         time_admit              timestamp without time zone,
         time_discharge          timestamp without time zone,
         total_bill              integer check(total_bill>=0),
-        Primary key(appointment_id,dept_id, ward_num, bed_num, time_admit),
+        Primary key(appointment_id),
         Foreign Key(appointment_id) references appointment on delete set Null,
         Foreign Key(dept_id,ward_num, bed_Num) references bed on delete set Null
 );
