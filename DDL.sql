@@ -276,8 +276,8 @@ CREATE TABLE test_appointment (
         result                  text,  /*null while result not published*/
         pathologist_id          integer,
         patient_id          	integer,
-        slot_name	            text,
-        day		                text,
+        /*slot_name	            text,*/
+        /*day		                text,*/
         start_time	            time without time zone,
         date		            date,
         timestamp	            timestamp without time zone,
