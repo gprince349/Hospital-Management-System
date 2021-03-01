@@ -34,10 +34,10 @@ CREATE TABLE slot (
 CREATE TABLE slot_interval ( 
         name		            text,
         day		                text,
-        start_from		        time,
-        end_to		            time,
-        Primary key(name, day, start_from),
-        Foreign key(name) references slot on delete set Null
+        start_time		        time,
+        end_time		        time,
+        Primary key(name, day, start_time),
+        Foreign key(name) references slot(name) on delete set Null
 );
 
 CREATE TABLE lab(
@@ -45,7 +45,7 @@ CREATE TABLE lab(
         name			        text,
         address		            text,
         appoints_per_slot	    integer check(appoints_per_slot >= 0 ),
-        slot_name		        text, 	/*??????????????*/
+        slot_name		        text,
         Primary key(id),
         Foreign key (slot_name) references slot on delete set null
 );
@@ -63,7 +63,7 @@ CREATE TABLE ward (
         type		            text check (type in ('general', 'ICU')),
         charge_per_day	        integer check(charge_per_day >= 0 ),
         Primary key (dept_id,ward_num),
-        Foreign key(dept_id) references department on delete set Null
+        Foreign key(dept_id) references department(id) on delete set Null
 );
 
 CREATE TABLE patient (
@@ -93,14 +93,14 @@ CREATE TABLE staff (
         address 	        text,
         slot_name	        text,
         Primary Key(id),
-        Foreign Key(slot_name) references slot on delete set Null
+        Foreign Key(slot_name) references slot(name) on delete set Null
 );
 
 
 CREATE TABLE accountant (	
         id		            integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null
+        Foreign Key(id) references staff(id) on delete set Null
 );
 
 
@@ -109,8 +109,8 @@ CREATE TABLE nurse (
         dept_id		        integer,
         ward_num	        integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null,
-        Foreign Key(dept_id, ward_num) references ward on delete set Null
+        Foreign Key(id) references staff(id) on delete set Null,
+        Foreign Key(dept_id, ward_num) references ward(dept_id,ward_num) on delete set Null
 );
 
 
@@ -119,20 +119,20 @@ CREATE TABLE pathologist (
         lab_id		                integer,
         Primary key(id),
         Foreign Key(id) references staff on delete set Null,
-        Foreign Key(lab_id) references lab on delete set Null
+        Foreign Key(lab_id) references lab(id) on delete set Null
 );
 
 
 CREATE TABLE pharmacy_keeper (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null
+        Foreign Key(id) references staff(id) on delete set Null
 );
 
 CREATE TABLE director (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null
+        Foreign Key(id) references staff(id) on delete set Null
 );
 
 CREATE TABLE admin (	
@@ -149,7 +149,7 @@ CREATE TABLE  doctor(
         appoints_per_slot 	    integer check(appoints_per_slot >=0 ),
         Primary key(id),
         Foreign key(id) references staff on delete set Null,
-        Foreign key(dept_id) references Department on delete set Null
+        Foreign key(dept_id) references department(id) on delete set Null
 );
 
 
@@ -160,7 +160,7 @@ CREATE TABLE bed (
         ward_num	            integer,
         bed_num	                integer,
         Primary key (dept_id,ward_num,bed_num),
-        Foreign Key(dept_id, ward_num) references ward on delete set Null
+        Foreign Key(dept_id, ward_num) references ward(dept_id, ward_num) on delete set Null
 );
 
 
@@ -174,13 +174,13 @@ CREATE TABLE appointment(
         patient_id	            integer,
         slot_name	            text,
         slot_day	            text,
-        start_from		            time without time zone,
-        end_to 		                time without time zone,
+        start_time		        time without time zone,
+        end_time 		        time without time zone,
 
         Primary key(id),
         Foreign Key(doctor_id) references doctor on delete set Null,
         Foreign Key(patient_id) references patient on delete set Null,
-        Foreign Key(slot_name, slot_day, start_from) references slot_interval on delete set Null
+        Foreign Key(slot_name, slot_day, start_time) references slot_interval(name,day,start_time) on delete set Null
 );
 
 
@@ -208,17 +208,15 @@ CREATE TABLE real_transaction (
 );
 
 CREATE TABLE admit (
-        doctor_id               integer,
-        patient_id              integer,
+        appointment_id          integer,
         dept_id                 integer,
         ward_num                integer,
         bed_num                 integer,
         time_admit              timestamp without time zone,
         time_discharge          timestamp without time zone,
         total_bill              integer check(total_bill>=0),
-        Primary key(doctor_id,patient_id, dept_id, ward_num, bed_num, time_admit),
-        Foreign Key(patient_id) references patient on delete set Null,
-        Foreign Key(doctor_id) references doctor on delete set Null,
+        Primary key(appointment_id,dept_id, ward_num, bed_num, time_admit),
+        Foreign Key(appointment_id) references appointment on delete set Null,
         Foreign Key(dept_id,ward_num, bed_Num) references bed on delete set Null
 );
 
@@ -275,7 +273,8 @@ CREATE TABLE prescribed_meds (
 CREATE TABLE test_appointment (
         id		                integer,
         test_id		            integer,
-        /*test_report_id	        integer,*/
+        result                  text,  /*null while result not published*/
+        pathologist_id          integer,
         patient_id          	integer,
         slot_name	            text,
         day		                text,
@@ -287,19 +286,23 @@ CREATE TABLE test_appointment (
         Foreign Key(test_id) references Test on delete set Null,
         /*Foreign Key(test_report_id) references Test_report on delete set Null,*/
         Foreign Key(patient_id) references patient on delete set Null,
-        Foreign Key(slot_name,day,start_time) references slot_interval on delete set Null
+        Foreign Key(pathologist_id) references patient on delete set Null,
+        Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
+
+
 /* why many to one */
 
+/*
 CREATE TABLE test_report (
         report_id		        integer,
         pathologist_id		    integer,
         test_appoint_id		    integer,
-        result			        text,	/*path of report*/
+        result			        text,
         Primary key(report_id),
         Foreign Key(pathologist_id) references pathologist on delete set Null,
         Foreign Key(test_appoint_id) references test_appointment on delete set Null
-);
+);*/
 
 
 
