@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS    test_report;
 DROP TABLE IF EXISTS    test_appointment;
 DROP TABLE IF EXISTS    prescribed_meds;
 DROP TABLE IF EXISTS    prescribed_tests;
@@ -25,136 +24,142 @@ DROP TABLE IF EXISTS    department;
 DROP TABLE IF EXISTS    slot_interval;
 DROP TABLE IF EXISTS    slot;
 
-
+-- 1
 CREATE TABLE slot (
+        name					text,
+        Primary key (name)
+);
+-- 2
+CREATE TABLE slot_interval ( 
+        name		            text,
+        day		            	text,
+        start_time		    	time,
+        end_time		    	time   Not null,
+        Primary key(name, day, start_time),
+        Foreign key(name) references slot(name) on delete set Cascade
+);
+-- 3
+CREATE TABLE lab(
+        id			        	integer,
+        name			        text    Not null,
+        address		         	text    Not null,
+        appoints_per_slot	   	integer	Not Null 	check(appoints_per_slot >= 0 ),
+        slot_name		        text    Not null,
+        Primary key(id),
+        Foreign key (slot_name) references slot
+);
+-- 4
+CREATE TABLE department ( 
         name		            text,
         Primary key (name)
 );
 
-CREATE TABLE slot_interval ( 
-        name		            text,
-        day		                text,
-        start_time		        time,
-        end_time		        time,
-        Primary key(name, day, start_time),
-        Foreign key(name) references slot(name) on delete set Null
-);
-
-CREATE TABLE lab(
-        id			            integer,
-        name			        text,
-        address		            text,
-        appoints_per_slot	    integer check(appoints_per_slot >= 0 ),
-        slot_name		        text,
-        Primary key(id),
-        Foreign key (slot_name) references slot on delete set null
-);
-
-CREATE TABLE department ( 
-        id		                integer,
-        name		            text,
-        Primary key (id)
-);
-
-
+-- 5
 CREATE TABLE ward (
-        dept_id		            integer,
+        dept_name               integer,
         ward_num	            integer,    
-        type		            text check (type in ('general', 'ICU')),
-        charge_per_day	        integer check(charge_per_day >= 0 ),
-        Primary key (dept_id,ward_num),
-        Foreign key(dept_id) references department(id) on delete set Null
+        type		            text 	Not null 	check (type in ('general', 'ICU')),
+        charge_per_day	        integer Not null	check(charge_per_day >= 0 ),
+        Primary key (dept_name,ward_num),
+        Foreign key(dept_name) references department(name)
 );
-
+-- 6
 CREATE TABLE patient (
         id		                integer,
         name 		            text,
         dob 		            date	Not Null,
-        phone  		            text	Not Null Unique,
-        address 	            text,
-        account_info 	        text,
-        balance 	            integer	check (balance >= 0 ),
-        gender 	                text	Check(gender in('Male','Female'))	,
+        gender 	                text	Not null	Check (gender in('Male','Female','Other')),
         height		            integer	check (height > 0 or height is null ) ,
         weight		            integer	check (weight > 0 or weight is null),
+        
+        phone  		            text	Not Null 	Unique,
+        passwd_hash				text 	Not null,
+		address 	            text,
+		district				text,
+		state					text,
+		country					text,
+		
+		account_info 	        text,
+        balance 	            integer	Not null	check (balance >= 0 ),
         Primary Key(id)
 );
 
-
+-- 7
 CREATE TABLE staff (
-        id                  integer NOT NULL,
-        name                text    NOT NULL,
-        gender              text,
-        date_of_joining 	date    NOT NULL,
-        date_of_leave   	date,	/*(null allowed => currently working)*/
-        dob 		        date,
-        salary 		        integer	check (salary >= 0),
-        phone 		        text	NOT NULL UNIQUE,
-        address 	        text,
-        slot_name	        text,
+        id                  	integer,
+        name                	text    NOT NULL,
+        gender              	text	Not null	Check (gender in('Male','Female','Other')),
+        date_of_joining 		date    NOT NULL,
+        date_of_leave   		date,	/*(null allowed => currently working)*/
+        dob 		        	date	Not null,
+        salary 		        	integer	Not null	check (salary >= 0),
+
+        phone 		        	text	NOT NULL UNIQUE,
+		passwd_hash				text	Not null,
+        address 	        	text,
+        slot_name	        	text,
         Primary Key(id),
-        Foreign Key(slot_name) references slot(name) on delete set Null
+        Foreign Key(slot_name) references slot(name)
 );
 
-
+-- 8
 CREATE TABLE accountant (	
-        id		            integer,
+        id		            	integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Null
+        Foreign Key(id) references staff(id) on delete set Cascade
 );
 
-
+-- 9
 CREATE TABLE nurse (	
-        id		            integer,
-        dept_id		        integer,
-        ward_num	        integer,
+        id		            	integer,
+        dept_name		        integer,
+        ward_num	        	integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Null,
-        Foreign Key(dept_id, ward_num) references ward(dept_id,ward_num) on delete set Null
+        Foreign Key(id) references staff(id) on delete set Cascade,
+        Foreign Key(dept_name, ward_num) references ward(dept_name,ward_num)
 );
 
-
+-- 10
 CREATE TABLE pathologist (	
         id		                    integer,
         lab_id		                integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null,
-        Foreign Key(lab_id) references lab(id) on delete set Null
+        Foreign Key(id) references staff on delete set Cascade,
+        Foreign Key(lab_id) references lab(id)
 );
 
-
-CREATE TABLE pharmacy_keeper (	
+-- 11
+CREATE TABLE pharmacy_keeper (
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Null
+        Foreign Key(id) references staff(id) on delete set Cascade
 );
-
+-- 12
 CREATE TABLE director (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Null
+        Foreign Key(id) references staff(id) on delete set Cascade
 );
-
+-- 13
 CREATE TABLE admin (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Null
+        Foreign Key(id) references staff on delete set Cascade
 );
-
+-- 14
 CREATE TABLE  doctor(	
         id		                integer,
-        dept_id		            integer,
-        fee		                integer	check (fee >= 0),
+        dept_name		        text,
+        fee		                integer	Not null	check (fee >= 0),
         room_no	                integer ,
-        appoints_per_slot 	    integer check(appoints_per_slot >=0 ),
+        appoints_per_slot 	    integer Not null	check(appoints_per_slot >=0 ),
         Primary key(id),
-        Foreign key(id) references staff on delete set Null,
-        Foreign key(dept_id) references department(id) on delete set Null
+        Foreign key(id) references staff on delete set Cascade,
+        Foreign key(dept_name) references department(name)
 );
 
 
-
-
+-- 15
 CREATE TABLE bed (
         dept_id		            integer,
         ward_num	            integer,
@@ -164,148 +169,134 @@ CREATE TABLE bed (
 );
 
 
-
+-- 16
 CREATE TABLE appointment(
         id			            integer,
-        timestamp_booking	    timestamp without time zone	Not Null,
-        date_appoint		    date 		Not Null,
-        status		            text	Not Null,
-        doctor_id	            integer,
-        patient_id	            integer,
-        slot_name	            text,
-        slot_day	            text,
-        start_time		        time without time zone,
+        timestamp_booking	    timestamp without time zone		Not Null,
+        date_appoint		    date 	Not Null,
+        status		            text	Not Null check(status in ('scheduled', 'complete', 'delayed', 'cancelled by doctor', 'cancelled')),
+        doctor_id	            integer	Not null,
+        patient_id	            integer	Not null,
+
+        slot_name	            text	Not null,
+        slot_day	            text	Not null,
+        start_time		        time without time zone	Not null,
         end_time 		        time without time zone,
 
         Primary key(id),
-        Foreign Key(doctor_id) references doctor on delete set Null,
-        Foreign Key(patient_id) references patient on delete set Null,
+        Foreign Key(doctor_id) references doctor,
+        Foreign Key(patient_id) references patient,
         Foreign Key(slot_name, slot_day, start_time) references slot_interval(name,day,start_time) on delete set Null
 );
 
 
-
+-- 17
 CREATE TABLE wallet_transaction ( 
         id 		                 integer,
-        patient_id 	             integer		Not Null,
-        amount		             integer check (amount >= 0) NOT NULL,
+        patient_id 	             integer,
+        amount		             integer	NOT NULL,
         service 	             text		Not Null,
         timestamp	             timestamp without time zone	Not Null,
         Primary Key(id),
         Foreign Key(patient_id) references patient on delete set Null
 );
 
-
+-- 18
 CREATE TABLE real_transaction (
         id 		                 integer,
         accountant_id	         integer,
-        patient_id          	 integer Not Null,
-        amount		             integer check (amount >=0 ) Not NULL,
+        patient_id          	 integer,
+        amount		             integer 	Not Null,
         time_stamp	             timestamp without time zone Not Null,
         Primary key(id),
         Foreign Key(patient_id) references patient on delete set Null,
         Foreign Key(accountant_id) references accountant(id) on delete set Null
 );
-
+-- 19
 CREATE TABLE admit (
         appointment_id          integer,
-        dept_id                 integer,
+        dept_name               text,
         ward_num                integer,
         bed_num                 integer,
-        time_admit              timestamp without time zone,
+        time_admit              timestamp without time zone		Not null,
         time_discharge          timestamp without time zone,
-        total_bill              integer check(total_bill>=0),
+        total_bill              integer 	check(total_bill>=0),
         Primary key(appointment_id),
-        Foreign Key(appointment_id) references appointment on delete set Null,
-        Foreign Key(dept_id,ward_num, bed_Num) references bed on delete set Null
+        Foreign Key(appointment_id) references appointment on delete Cascade,
+        Foreign Key(dept_name,ward_num, bed_num) references bed on delete set Null,
+		Check 	(time_discharge is not null OR (dept_name is not null AND ward_num is not null AND bed_num is not null
+		-- make sure that if patient is not discharged then bed should exist
 );
 
-
+-- 20
 CREATE TABLE prescription(
         appointment_id		    integer,
+		diagnosis				text 	Not null,
         remarks		            text,
         Primary key(appointment_id)
+		Foreign key(appointment_id) references appointment on delete set Cascade
 );
 
 
-
-
+-- 21
 CREATE TABLE test (
         test_id		            integer,
-        lab_id  		        integer	Not Null,
-        test_name	            text,
-        test_fee	            integer check (test_fee >= 0 ),
+        lab_id  		        integer		Not Null,
+        test_name	            text		Not null,
+        test_fee	            integer 	Not null	check (test_fee >= 0 ),
+		description				text,
         Primary key(test_id),
-        Foreign Key(lab_id) references lab on delete set Null
+        Foreign Key(lab_id) references lab
 );
 
-
+-- 22
 CREATE TABLE medicine (
         id		                integer,
-        name		            text,
-        price		            integer check(price >=0 ),
-        company	                text,
-        available_quantity	    integer	check(available_quantity >= 0 ),
+        name		            text		Not null,
+        price		            integer 	Not null	check(price >=0 ),
+        company	                text		Not null,
+        available_quantity	    integer		Not null	check(available_quantity >= 0 ),
         Primary key(id)
 );
-
+-- 23
 CREATE TABLE prescribed_tests (
         prescription_id		    integer,
         test_id			        integer,
         Primary key(prescription_id,test_id),
-        Foreign Key(prescription_id) references prescription on delete set Null,
+        Foreign Key(prescription_id) references prescription on delete set Cascade,
         Foreign Key(test_id) references Test on delete set Null
 );
 
-
+-- 24
 CREATE TABLE prescribed_meds (
         prescription_id		    integer,
         med_id			        integer,
-        Dose_per_day	    	integer,
-        Duration		        integer,
+        dose_per_day	    	integer 	check(dose_per_day >= 0 OR dose_per_day is null),
+        duration		        integer		check(duration >= 0 OR duration is null),
         Primary key(prescription_id,med_id),
-        Foreign Key(prescription_id) references prescription on delete set Null,
+        Foreign Key(prescription_id) references prescription on delete set Cascade,
         Foreign Key(med_id) references medicine on delete set Null
 );
 
-
-
+-- 25
 CREATE TABLE test_appointment (
         id		                integer,
-        test_id		            integer,
-        result                  text,  /*null while result not published*/
-        pathologist_id          integer,
-        patient_id          	integer,
-        /*slot_name	            text,*/
-        /*day		                text,*/
-        start_time	            time without time zone,
-        date		            date,
+        test_id		            integer		Not null,
         timestamp	            timestamp without time zone,
-        status		            text,
+        pathologist_id          integer,
+        patient_id          	integer		Not null,
+
+        slot_name	            text		Not null,
+        day		                text		Not null,
+        start_time	            time without time zone,
+        date		            date		Not null,
+        status		            text 	Not null check(state in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),
+        result                  text,  			/*null while result not published*/
+
         Primary key(id),
-        Foreign Key(test_id) references Test on delete set Null,
-        /*Foreign Key(test_report_id) references Test_report on delete set Null,*/
-        Foreign Key(patient_id) references patient on delete set Null,
-        Foreign Key(pathologist_id) references patient on delete set Null,
+        Foreign Key(test_id) references Test,
+        Foreign Key(patient_id) references patient,
+        Foreign Key(pathologist_id) references pathologist,
         Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
-
-
-/* why many to one */
-
-/*
-CREATE TABLE test_report (
-        report_id		        integer,
-        pathologist_id		    integer,
-        test_appoint_id		    integer,
-        result			        text,
-        Primary key(report_id),
-        Foreign Key(pathologist_id) references pathologist on delete set Null,
-        Foreign Key(test_appoint_id) references test_appointment on delete set Null
-);*/
-
-
-
- 
-
 
