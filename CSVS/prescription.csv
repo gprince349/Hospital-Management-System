@@ -1,0 +1,11 @@
+appointment_id,diagnosis,remarks
+1,Lupus,"toxicology, blood test"
+2,Heart attack,"CT-scan, MRI, ECG"
+5,Brain Tumor,"CT-scan, MRI"
+6,Cavities,
+7,Acne,
+9,broken arm,"X-Ray, CT-scan"
+12,arrhythmias,"CT-scan, MRI, ECG"
+14,influenza,virology
+16,ankle fractured,"X-Ray, CT-scan"
+17,hair loss,

@@ -32,7 +32,7 @@ CREATE TABLE slot (
 -- 2
 CREATE TABLE slot_interval ( 
         name		            text,
-        day		            	text,
+        day		            	integer	check(day >=0 and day < 7),
         start_time		    	time,
         end_time		    	time   Not null,
         Primary key(name, day, start_time),
@@ -172,14 +172,14 @@ CREATE TABLE bed (
 -- 16
 CREATE TABLE appointment(
         id			            integer,
-        timestamp_booking	    timestamp without time zone		Not Null,
+        timestamp_			    timestamp without time zone		Default current_timestamp,
         date_appoint		    date 	Not Null,
         status		            text	Not Null check(status in ('scheduled', 'complete', 'delayed', 'cancelled by doctor', 'cancelled')),
         doctor_id	            integer	Not null,
         patient_id	            integer	Not null,
 
         slot_name	            text	Not null,
-        slot_day	            text	Not null,
+        slot_day	            integer	Not null,
         start_time		        time without time zone	Not null,
         end_time 		        time without time zone,
 
@@ -196,7 +196,7 @@ CREATE TABLE wallet_transaction (
         patient_id 	             integer,
         amount		             integer	NOT NULL,
         service 	             text		Not Null,
-        timestamp	             timestamp without time zone	Not Null,
+        timestamp_	             timestamp without time zone	Default current_timestamp,
         Primary Key(id),
         Foreign Key(patient_id) references patient on delete set Null
 );
@@ -207,7 +207,7 @@ CREATE TABLE real_transaction (
         accountant_id	         integer,
         patient_id          	 integer,
         amount		             integer 	Not Null,
-        time_stamp	             timestamp without time zone Not Null,
+        timestamp_	             timestamp without time zone 	Default current_timestamp,
         Primary key(id),
         Foreign Key(patient_id) references patient on delete set Null,
         Foreign Key(accountant_id) references accountant(id) on delete set Null
@@ -218,7 +218,7 @@ CREATE TABLE admit (
         dept_name               text,
         ward_num                integer,
         bed_num                 integer,
-        time_admit              timestamp without time zone		Not null,
+        time_admit              timestamp without time zone		Default current_timestamp,
         time_discharge          timestamp without time zone,
         total_bill              integer 	check(total_bill>=0),
         Primary key(appointment_id),
@@ -282,12 +282,12 @@ CREATE TABLE prescribed_meds (
 CREATE TABLE test_appointment (
         id		                integer,
         test_id		            integer		Not null,
-        timestamp	            timestamp without time zone,
+        timestamp_	            timestamp without time zone		Default current_timestamp,
         pathologist_id          integer,
         patient_id          	integer		Not null,
 
         slot_name	            text		Not null,
-        day		                text		Not null,
+        day		                integer		Not null,
         start_time	            time without time zone,
         date		            date		Not null,
         status		            text 	Not null check(state in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),

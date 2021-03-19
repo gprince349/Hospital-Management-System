@@ -1,0 +1,11 @@
+test_id,lab_id,test_name,test_fee,description
+1,1,virology,500,virology
+2,1,bacteriology,1000,bacteriology
+3,1,immunology,500,immunology
+4,2,toxicology,1000,toxicology
+5,2,enzymology,500,enzymology
+6,3,MRI,1000,MRI
+7,3,CT Scan,500,CT Scan
+8,3,ECG,1000,ECG
+9,4,blood test,1000,blood test
+10,5,X-Ray,500,X-Ray

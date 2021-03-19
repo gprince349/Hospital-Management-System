@@ -1,0 +1,6 @@
+id,name,address,appoint_per_slot,slot_name
+1,Microbiology,"Microbiology, Room 101",2,general
+2,Clinical chemistry,"Clinical chemistry, Room 102",2,general
+3,"MRI, CT Scan & ECG","MRI, CT Scan & ECG, Room 201",2,general
+4,Blood Bank,"Blood Bank, Room 202",2,general
+5,X-Ray,"X-Ray, Room 203",2,general

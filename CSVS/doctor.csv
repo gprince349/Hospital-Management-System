@@ -1,0 +1,11 @@
+id,dept_name,fee,room_no,appoints_per_slot
+1,Emergency,500,1,4
+2,Cardiology,500,2,4
+3,Intensive Care Unit,500,3,4
+4,Pediatric,500,4,4
+5,Neurology,500,5,4
+6,Dentistry,500,6,4
+7,Dermatology,500,7,4
+8,Psychiatric,500,8,4
+9,Orthopedic,500,9,4
+10,ENT,500,10,4
