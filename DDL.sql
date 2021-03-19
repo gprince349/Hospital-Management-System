@@ -88,6 +88,8 @@ CREATE TABLE patient (
 CREATE TABLE staff (
         id                  	integer,
         name                	text    NOT NULL,
+		type 					text	Not Null,
+		
         gender              	text	Not null	Check (gender in('Male','Female','Other')),
         date_of_joining 		date    NOT NULL,
         date_of_leave   		date,	/*(null allowed => currently working)*/
