@@ -39,35 +39,35 @@ where (count < max_appoints OR count is null)
 
 -- pay and confirm slot booking GIVEN(date, day, slot_name, start_time, end_time, patient_id, fee)
 -- creating a function to do booking
-create or replace function book_appoint(max_appoints int, cur_appoints int, 
-        appoint_date date, start_time time, end_time time, p_id int, d_id int, slot_name text, day int, fee int)
-returns int
-language plpgsql
-as
-$$
-declare
-   a integer;
-begin
-    select 0 into a;
-    if (cur_appoints >= max_appoints) then
-        raise exception 'slot is full';
+-- create or replace function book_appoint(max_appoints int, cur_appoints int, 
+--         appoint_date date, start_time time, end_time time, p_id int, d_id int, slot_name text, day int, fee int)
+-- returns int
+-- language plpgsql
+-- as
+-- $$
+-- declare
+--    a integer;
+-- begin
+--     select 0 into a;
+--     if (cur_appoints >= max_appoints) then
+--         raise exception 'slot is full';
 
-    elseif ((select balance from patient where id = p_id) < fee) then
-        raise exception 'insufficient balance in your wallet, recharge it';
-    else
-        insert into appointment(date_appoint, status, doctor_id, patient_id, slot_name, slot_day, start_time, end_time)
-        values (appoint_date, 'schedualed', d_id, p_id, slot_name, day, appoint_time, end_time);
+--     elseif ((select balance from patient where id = p_id) < fee) then
+--         raise exception 'insufficient balance in your wallet, recharge it';
+--     else
+--         insert into appointment(date_appoint, status, doctor_id, patient_id, slot_name, slot_day, start_time, end_time)
+--         values (appoint_date, 'schedualed', d_id, p_id, slot_name, day, appoint_time, end_time);
 
-        update patient set balance = balance - fee where id = p_id;
+--         update patient set balance = balance - fee where id = p_id;
 
-        insert into wallet_transaction (patient_id, amount, service)
-        values (p_id, -fee, 'appointment booking');
+--         insert into wallet_transaction (patient_id, amount, service)
+--         values (p_id, -fee, 'appointment booking');
         
-        select 1 into a;
-    end if;
-    return a;
-end;
-$$;
+--         select 1 into a;
+--     end if;
+--     return a;
+-- end;
+-- $$;
 
 -- transaction to book appointment
 BEGIN TRANSACTION;
@@ -108,8 +108,18 @@ COMMIT TRANSACTION;
 
 
 -- withdraw money from wallet to bank
-BEGIN TRANSACTION;
+BEGIN TRANSACTION;pat
 insert into real_transaction(accountant_id, patient_id, amount) values (null, ?, ?);
 update patient set balance = balance - ? where id = ?;
 COMMIT TRANSACTION;
 
+
+
+
+
+
+
+-- staff login query
+select * from staff where phone = ? and passwd_hash = ?;
+-- now based on type field respond with appropriate interface
+    

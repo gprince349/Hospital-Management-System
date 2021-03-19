@@ -1,3 +1,6 @@
+DROP TRIGGER IF EXISTS check_delayed on appointment;
+DROP TRIGGER IF EXISTS check_test_delayed on test_appointment;
+
 DROP TABLE IF EXISTS    test_appointment;                  
 DROP TABLE IF EXISTS    prescribed_meds;                
 DROP TABLE IF EXISTS    prescribed_tests;                
@@ -22,7 +25,8 @@ DROP TABLE IF EXISTS    lab;
 DROP TABLE IF EXISTS    ward;                   
 DROP TABLE IF EXISTS    department;                
 DROP TABLE IF EXISTS    slot_interval;                
-DROP TABLE IF EXISTS    slot;                
+DROP TABLE IF EXISTS    slot;   
+
                 
 -- 1
 CREATE TABLE slot (
@@ -304,3 +308,78 @@ CREATE TABLE test_appointment (
         Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
 
+
+
+-- Triggers
+-- trigger to check for any delayed appointment
+-- before any INSERT/UPDATE/DELETE
+CREATE OR replace FUNCTION check_appoint_delayed()
+   RETURNS TRIGGER 
+   LANGUAGE PLPGSQL
+AS $$
+BEGIN
+   -- trigger logic
+    update appointment set status = 'delayed'
+    where status = 'scheduled'
+    and (date_appoint < current_date) OR (date_appoint = current_date and end_time < current_time);
+END;
+$$;
+
+create trigger check_delayed AFTER insert OR update OR delete
+on appointment
+for each statement
+execute procedure check_appoint_delayed();
+
+
+-- trigger to check for any delayed test_appointment
+-- before any INSERT/UPDATE/DELETE
+CREATE OR replace FUNCTION check_test_appoint_delayed() 
+   RETURNS TRIGGER 
+   LANGUAGE PLPGSQL
+AS $$
+BEGIN
+   -- trigger logic
+    update test_appointment set status = 'delayed'
+    where status = 'scheduled' 
+    and (date_appoint < current_date) OR (date_appoint = current_date and end_time < current_time);
+END;
+$$;
+
+create trigger check_test_delayed AFTER insert OR update OR delete
+on test_appointment
+for each statement
+execute procedure check_test_appoint_delayed();
+
+
+
+-- pay and confirm slot booking GIVEN(date, day, slot_name, start_time, end_time, patient_id, fee)
+-- creating a function to do booking
+create or replace function book_appoint(max_appoints int, cur_appoints int, 
+        appoint_date date, start_time time, end_time time, p_id int, d_id int, slot_name text, day int, fee int)
+returns int
+language plpgsql
+as
+$$
+declare
+   a integer;
+begin
+    select 0 into a;
+    if (cur_appoints >= max_appoints) then
+        raise exception 'slot is full';
+
+    elseif ((select balance from patient where id = p_id) < fee) then
+        raise exception 'insufficient balance in your wallet, recharge it';
+    else
+        insert into appointment(date_appoint, status, doctor_id, patient_id, slot_name, slot_day, start_time, end_time)
+        values (appoint_date, 'schedualed', d_id, p_id, slot_name, day, appoint_time, end_time);
+
+        update patient set balance = balance - fee where id = p_id;
+
+        insert into wallet_transaction (patient_id, amount, service)
+        values (p_id, -fee, 'appointment booking');
+        
+        select 1 into a;
+    end if;
+    return a;
+end;
+$$;
