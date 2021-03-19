@@ -100,14 +100,14 @@ COMMIT TRANSACTION;
 
 
 
--- adding money to waller from bank
+-- adding money to wallet from bank
 BEGIN TRANSACTION;
 insert into real_transaction(accountant_id, patient_id, amount) values (null, ?, ?);
 update patient set balance = balance + ? where id = ?;
 COMMIT TRANSACTION;
 
 
--- withdraw money from waller to bank
+-- withdraw money from wallet to bank
 BEGIN TRANSACTION;
 insert into real_transaction(accountant_id, patient_id, amount) values (null, ?, ?);
 update patient set balance = balance - ? where id = ?;

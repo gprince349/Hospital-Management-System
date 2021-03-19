@@ -29,6 +29,7 @@ CREATE TABLE slot (
         name					text,
         Primary key (name)
 );
+
 -- 2
 CREATE TABLE slot_interval ( 
         name		            text,
@@ -36,7 +37,7 @@ CREATE TABLE slot_interval (
         start_time		    	time,
         end_time		    	time   Not null,
         Primary key(name, day, start_time),
-        Foreign key(name) references slot(name) on delete set Cascade
+        Foreign key(name) references slot(name) on delete Cascade
 );
 -- 3
 CREATE TABLE lab(
@@ -56,7 +57,7 @@ CREATE TABLE department (
 
 -- 5
 CREATE TABLE ward (
-        dept_name               integer,
+        dept_name               text,
         ward_num	            integer,    
         type		            text 	Not null 	check (type in ('general', 'ICU')),
         charge_per_day	        integer Not null	check(charge_per_day >= 0 ),
@@ -88,7 +89,7 @@ CREATE TABLE patient (
 CREATE TABLE staff (
         id                  	integer,
         name                	text    NOT NULL,
-        gender              	text	Not null	Check (gender in('Male','Female','Other')),
+        gender              	text	Not null	Check (gender in('male','female','Other')),
         date_of_joining 		date    NOT NULL,
         date_of_leave   		date,	/*(null allowed => currently working)*/
         dob 		        	date	Not null,
@@ -106,16 +107,16 @@ CREATE TABLE staff (
 CREATE TABLE accountant (	
         id		            	integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Cascade
+        Foreign Key(id) references staff(id) on delete Cascade
 );
 
 -- 9
 CREATE TABLE nurse (	
         id		            	integer,
-        dept_name		        integer,
+        dept_name		        text,
         ward_num	        	integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Cascade,
+        Foreign Key(id) references staff(id) on delete Cascade,
         Foreign Key(dept_name, ward_num) references ward(dept_name,ward_num)
 );
 
@@ -124,7 +125,7 @@ CREATE TABLE pathologist (
         id		                    integer,
         lab_id		                integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Cascade,
+        Foreign Key(id) references staff on delete Cascade,
         Foreign Key(lab_id) references lab(id)
 );
 
@@ -132,19 +133,19 @@ CREATE TABLE pathologist (
 CREATE TABLE pharmacy_keeper (
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Cascade
+        Foreign Key(id) references staff(id) on delete Cascade
 );
 -- 12
 CREATE TABLE director (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff(id) on delete set Cascade
+        Foreign Key(id) references staff(id) on delete Cascade
 );
 -- 13
 CREATE TABLE admin (	
         id		                    integer,
         Primary key(id),
-        Foreign Key(id) references staff on delete set Cascade
+        Foreign Key(id) references staff on delete Cascade
 );
 -- 14
 CREATE TABLE  doctor(	
@@ -154,18 +155,18 @@ CREATE TABLE  doctor(
         room_no	                integer ,
         appoints_per_slot 	    integer Not null	check(appoints_per_slot >=0 ),
         Primary key(id),
-        Foreign key(id) references staff on delete set Cascade,
+        Foreign key(id) references staff on delete Cascade,
         Foreign key(dept_name) references department(name)
 );
 
 
 -- 15
 CREATE TABLE bed (
-        dept_id		            integer,
+        dept_name		            text,
         ward_num	            integer,
         bed_num	                integer,
-        Primary key (dept_id,ward_num,bed_num),
-        Foreign Key(dept_id, ward_num) references ward(dept_id, ward_num) on delete set Null
+        Primary key (dept_name,ward_num,bed_num),
+        Foreign Key(dept_name, ward_num) references ward(dept_name, ward_num) on delete Cascade
 );
 
 
@@ -222,9 +223,9 @@ CREATE TABLE admit (
         time_discharge          timestamp without time zone,
         total_bill              integer 	check(total_bill>=0),
         Primary key(appointment_id),
-        Foreign Key(appointment_id) references appointment on delete Cascade,
+        Foreign Key(appointment_id) references appointment on delete set NULL,
         Foreign Key(dept_name,ward_num, bed_num) references bed on delete set Null,
-		Check 	(time_discharge is not null OR (dept_name is not null AND ward_num is not null AND bed_num is not null
+		Check (time_discharge is not null OR (dept_name is not null AND ward_num is not null AND bed_num is not null))
 		-- make sure that if patient is not discharged then bed should exist
 );
 
@@ -233,8 +234,8 @@ CREATE TABLE prescription(
         appointment_id		    integer,
 		diagnosis				text 	Not null,
         remarks		            text,
-        Primary key(appointment_id)
-		Foreign key(appointment_id) references appointment on delete set Cascade
+        Primary key(appointment_id),
+	Foreign key(appointment_id) references appointment on delete Cascade
 );
 
 
@@ -263,7 +264,7 @@ CREATE TABLE prescribed_tests (
         prescription_id		    integer,
         test_id			        integer,
         Primary key(prescription_id,test_id),
-        Foreign Key(prescription_id) references prescription on delete set Cascade,
+        Foreign Key(prescription_id) references prescription on delete Cascade,
         Foreign Key(test_id) references Test on delete set Null
 );
 
@@ -274,7 +275,7 @@ CREATE TABLE prescribed_meds (
         dose_per_day	    	integer 	check(dose_per_day >= 0 OR dose_per_day is null),
         duration		        integer		check(duration >= 0 OR duration is null),
         Primary key(prescription_id,med_id),
-        Foreign Key(prescription_id) references prescription on delete set Cascade,
+        Foreign Key(prescription_id) references prescription on delete Cascade,
         Foreign Key(med_id) references medicine on delete set Null
 );
 
@@ -290,7 +291,7 @@ CREATE TABLE test_appointment (
         day		                integer		Not null,
         start_time	            time without time zone,
         date		            date		Not null,
-        status		            text 	Not null check(state in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),
+        status		            text 	Not null check(status in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),
         result                  text,  			/*null while result not published*/
 
         Primary key(id),
