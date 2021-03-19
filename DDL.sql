@@ -1,29 +1,29 @@
-DROP TABLE IF EXISTS    test_appointment;
-DROP TABLE IF EXISTS    prescribed_meds;
-DROP TABLE IF EXISTS    prescribed_tests;
-DROP TABLE IF EXISTS    medicine;
-DROP TABLE IF EXISTS    test;
-DROP TABLE IF EXISTS    prescription;
-DROP TABLE IF EXISTS    admit;
-DROP TABLE IF EXISTS    real_transaction;
+DROP TABLE IF EXISTS    test_appointment;                  
+DROP TABLE IF EXISTS    prescribed_meds;                
+DROP TABLE IF EXISTS    prescribed_tests;                
+DROP TABLE IF EXISTS    medicine;                
+DROP TABLE IF EXISTS    test;                
+DROP TABLE IF EXISTS    prescription;                
+DROP TABLE IF EXISTS    admit;                
+DROP TABLE IF EXISTS    real_transaction;                
 DROP TABLE IF EXISTS    wallet_transaction;
-DROP TABLE IF EXISTS    appointment;
-DROP TABLE IF EXISTS    bed;
-DROP TABLE IF EXISTS    doctor;
-DROP TABLE IF EXISTS    admin;
-DROP TABLE IF EXISTS    director;
-DROP TABLE IF EXISTS    pharmacy_keeper;
-DROP TABLE IF EXISTS    pathologist;
-DROP TABLE IF EXISTS    accountant; 
-DROP TABLE IF EXISTS    nurse;
-DROP TABLE IF EXISTS    staff;
-DROP TABLE IF EXISTS    patient;
-DROP TABLE IF EXISTS    lab;
-DROP TABLE IF EXISTS    ward;   
-DROP TABLE IF EXISTS    department;
-DROP TABLE IF EXISTS    slot_interval;
-DROP TABLE IF EXISTS    slot;
-
+DROP TABLE IF EXISTS    appointment;                
+DROP TABLE IF EXISTS    bed;                
+DROP TABLE IF EXISTS    doctor;                
+DROP TABLE IF EXISTS    admin;                
+DROP TABLE IF EXISTS    director;                
+DROP TABLE IF EXISTS    pharmacy_keeper;                
+DROP TABLE IF EXISTS    pathologist;                
+DROP TABLE IF EXISTS    accountant;                 
+DROP TABLE IF EXISTS    nurse;                
+DROP TABLE IF EXISTS    staff;                
+DROP TABLE IF EXISTS    patient;                
+DROP TABLE IF EXISTS    lab;                
+DROP TABLE IF EXISTS    ward;                   
+DROP TABLE IF EXISTS    department;                
+DROP TABLE IF EXISTS    slot_interval;                
+DROP TABLE IF EXISTS    slot;                
+                
 -- 1
 CREATE TABLE slot (
         name					text,
@@ -49,6 +49,7 @@ CREATE TABLE lab(
         Primary key(id),
         Foreign key (slot_name) references slot
 );
+
 -- 4
 CREATE TABLE department ( 
         name		            text,
@@ -59,7 +60,7 @@ CREATE TABLE department (
 CREATE TABLE ward (
         dept_name               text,
         ward_num	            integer,    
-        type		            text 	Not null 	check (type in ('general', 'ICU')),
+        type		            text 	Not null 	check (type in ('General', 'ICU')),
         charge_per_day	        integer Not null	check(charge_per_day >= 0 ),
         Primary key (dept_name,ward_num),
         Foreign key(dept_name) references department(name)
@@ -69,19 +70,19 @@ CREATE TABLE patient (
         id		                integer,
         name 		            text,
         dob 		            date	Not Null,
-        gender 	                text	Not null	Check (gender in('Male','Female','Other')),
-        height		            integer	check (height > 0 or height is null ) ,
-        weight		            integer	check (weight > 0 or weight is null),
-        
         phone  		            text	Not Null 	Unique,
         passwd_hash				text 	Not null,
+		account_info 	        text,
+        balance 	            integer	Not null	check (balance >= 0 ),
+        gender 	                text	Not null	Check (gender in('male','female','other')),
 		address 	            text,
 		district				text,
 		state					text,
 		country					text,
+        height		            integer	check (height > 0 or height is null ) ,
+        weight		            integer	check (weight > 0 or weight is null),
+        
 		
-		account_info 	        text,
-        balance 	            integer	Not null	check (balance >= 0 ),
         Primary Key(id)
 );
 
@@ -89,9 +90,8 @@ CREATE TABLE patient (
 CREATE TABLE staff (
         id                  	integer,
         name                	text    NOT NULL,
-        gender              	text	Not null	Check (gender in('male','female','other')),
 	type 					text	Not Null,
-		
+        gender              	text	Not null Check (gender in('male','female','other')),
         date_of_joining 		date    NOT NULL,
         date_of_leave   		date,	/*(null allowed => currently working)*/
         dob 		        	date	Not null,
@@ -256,7 +256,7 @@ CREATE TABLE test (
 CREATE TABLE medicine (
         id		                integer,
         name		            text		Not null,
-        price		            integer 	Not null	check(price >=0 ),
+        price		              integer 	Not null	check(price >=0 ),
         company	                text		Not null,
         available_quantity	    integer		Not null	check(available_quantity >= 0 ),
         Primary key(id)
@@ -285,14 +285,15 @@ CREATE TABLE prescribed_meds (
 CREATE TABLE test_appointment (
         id		                integer,
         test_id		            integer		Not null,
-        timestamp_	            timestamp without time zone		Default current_timestamp,
+        timestamp_	            timestamp without time zone	Default current_timestamp,
         pathologist_id          integer,
         patient_id          	integer		Not null,
 
         slot_name	            text		Not null,
         day		                integer		Not null,
         start_time	            time without time zone,
-        date		            date		Not null,
+        end_time	            time without time zone,
+        date_appoint		            date		Not null,
         status		            text 	Not null check(status in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),
         result                  text,  			/*null while result not published*/
 
