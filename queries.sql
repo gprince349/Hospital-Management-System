@@ -114,12 +114,50 @@ update patient set balance = balance - ? where id = ?;
 COMMIT TRANSACTION;
 
 
-
-
-
-
-
 -- staff login query
 select * from staff where phone = ? and passwd_hash = ?;
 -- now based on type field respond with appropriate interface
     
+
+
+
+
+
+-- Analytics
+
+select date_part('year',date_appoint) as year, date_part('month',date_appoint) as month, count(*) as Num_of_appointments 
+from appointment 
+group by date_part('year',date_appoint),date_part('month',date_appoint);
+
+select date_part('year',date_appoint) as year, date_part('week',date_appoint) as week, count(*) as Num_of_appointments 
+from appointment 
+group by date_part('year',date_appoint),date_part('week',date_appoint);
+
+
+with R as 
+    (select doctor_id, count(*) as Num_of_appointments
+        from appointment
+        group by doctor_id)
+    select id, name,Num_of_appointments from 
+    R join staff on (R.doctor_id = staff.id);
+
+
+select date_part('year',date_appoint) as year, date_part('month',date_appoint) as month, count(*) as Num_of_appointments 
+from test_appointment 
+group by date_part('year',date_appoint),date_part('month',date_appoint);
+
+select date_part('year',date_appoint) as year, date_part('week',date_appoint) as week, count(*) as Num_of_appointments 
+from test_appointment 
+group by date_part('year',date_appoint),date_part('week',date_appoint);
+
+with R as 
+    (select test_id, count(*) as Num_of_appointments
+        from test_appointment
+        group by test_id)
+    select test.test_id, test_name,Num_of_appointments from 
+    R join test on (R.test_id = test.test_id);
+
+
+
+
+
