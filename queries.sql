@@ -158,6 +158,70 @@ with R as
     R join test on (R.test_id = test.test_id);
 
 
+/* No_of_patients for each disease (per month , per year) grouping by age, gender, location */
+
+select P.diagnosis as disease, count(patient_id) as Num_of_patients
+from appointment as A join prescription as P on (A.id = P.appointment_id)
+group by diagnosis
 
 
+select date_part('year', A.date_appoint) as Year, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
+from appointment as A join prescription as P on (A.id = P.appointment_id)
+group by date_part('year', A.date_appoint),P.diagnosis
+
+select date_part('month', A.date_appoint) as Month, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
+from appointment as A join prescription as P on (A.id = P.appointment_id)
+group by date_part('month', A.date_appoint),P.diagnosis
+
+select P.diagnosis as disease, PT.gender, count(A.patient_id) as Num_of_patients
+from (appointment as A join prescription as P on (A.id = P.appointment_id)) join patient as PT on (PT.id = A.patient_id )
+group by P.diagnosis, PT.gender
+
+
+
+select P.diagnosis as disease, 
+    case
+    when datediff(now(), PT.dob) / 365.25 > 50 then '51 & over'
+    when datediff(now(), PT.dob) / 365.25 > 19 then '20 - 30'
+    when datediff(now(), PT.dob) / 365.25 > 30 then '31 - 50'
+    else 'under 20'
+  end as age_group
+ ,count(A.patient_id) as Num_of_patients
+from (appointment as A join prescription as P on (A.id = P.appointment_id)) join patient as PT on (PT.id = A.patient_id )
+group by P.diagnosis,  age_group
+
+
+--Trending diseases in every season (which disease has most no of cases in particular season)
+
+select date_part('month', A.date_appoint) as Month, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
+from appointment as A join prescription as P on (A.id = P.appointment_id)
+group by date_part('month', A.date_appoint),P.diagnosis
+order by Num_of_patients DESC 
+
+
+--No of Admitted patient per ward per department
+
+select dept_name, ward_num, Count(appointment_id) as Num_of_patients
+from admit 
+group by dept_name, ward_num
+
+
+--#Transactions and amount_transaction per day/month/year and for appointment booking with doctor, for lab_test, at pharmacy_store
+select date_part('year', Timestamp timestamp_) as Year, count(*) as Num_of_transaction
+from real_transaction
+group by date_part('year', Timestamp timestamp_)
+
+select date_part('year', Timestamp timestamp_) as Year, date_part('month', Timestamp timestamp_) as Month, count(*) as Num_of_transaction
+from real_transaction
+group by date_part('year', Timestamp timestamp_),date_part('month', Timestamp timestamp_)
+
+
+
+select date_part('year', Timestamp timestamp_) as Year, count(amount) as NET_Cash_flow
+from real_transaction
+group by date_part('year', Timestamp timestamp_)
+
+select date_part('year', Timestamp timestamp_) as Year, date_part('month', Timestamp timestamp_) as Month, count(amount) as NET_Cash_flow
+from real_transaction
+group by date_part('year', Timestamp timestamp_),date_part('month', Timestamp timestamp_)
 
