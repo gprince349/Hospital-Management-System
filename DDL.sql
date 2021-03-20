@@ -92,7 +92,7 @@ CREATE TABLE patient (
 CREATE TABLE staff (
         id                  	integer,
         name                	text    NOT NULL,
-	type 					text	Not Null,
+		type 					text	Not Null,
         gender              	text	Not null Check (gender in('male','female','other')),
         date_of_joining 		date    NOT NULL,
         date_of_leave   		date,	/*(null allowed => currently working)*/
@@ -166,7 +166,7 @@ CREATE TABLE  doctor(
 
 -- 15
 CREATE TABLE bed (
-        dept_name		            text,
+        dept_name		        text,
         ward_num	            integer,
         bed_num	                integer,
         Primary key (dept_name,ward_num,bed_num),
@@ -258,7 +258,7 @@ CREATE TABLE test (
 CREATE TABLE medicine (
         id		                integer,
         name		            text		Not null,
-        price		              integer 	Not null	check(price >=0 ),
+        price		            integer 	Not null	check(price >=0 ),
         company	                text		Not null,
         available_quantity	    integer		Not null	check(available_quantity >= 0 ),
         Primary key(id)
@@ -295,7 +295,7 @@ CREATE TABLE test_appointment (
         slot_day		                integer		Not null,
         start_time	            time without time zone,
         end_time	            time without time zone,
-        date_appoint		            date		Not null,
+        date_appoint		    date		Not null,
         status		            text 	Not null check(status in ('scheduled', 'sample_taken', 'complete', 'delayed', 'cancelled', 'cancelled by pathologist')),
         result                  text,  			/*null while result not published*/
 
@@ -305,6 +305,20 @@ CREATE TABLE test_appointment (
         Foreign Key(pathologist_id) references pathologist,
         Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
+
+
+
+
+-- ================== Indexes =====================
+Create index doct_appointment 		on appointment USING btree (doctor_id);
+Create index patient_appointment 	on appointment USING btree (patient_id);
+Create index date_appointment 		on appointment USING btree (date_appoint);
+Create index st_appointment 		on appointment USING btree (status);
+
+Create index patho_test_appointment on test_appointment USING btree (pathologist_id);
+Create index patient_test_appointment on test_appointment USING btree (patient_id);
+Create index date_test_appointment 	on test_appointment USING btree (date_appoint);
+Create index st_test_appointment 	  on test_appointment USING btree (status);
 
 
 

@@ -108,7 +108,7 @@ COMMIT TRANSACTION;
 
 
 -- withdraw money from wallet to bank
-BEGIN TRANSACTION;pat
+BEGIN TRANSACTION;
 insert into real_transaction(accountant_id, patient_id, amount) values (null, ?, ?);
 update patient set balance = balance - ? where id = ?;
 COMMIT TRANSACTION;
