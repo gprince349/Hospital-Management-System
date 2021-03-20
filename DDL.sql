@@ -25,9 +25,7 @@ DROP TABLE IF EXISTS    lab;
 DROP TABLE IF EXISTS    ward;                   
 DROP TABLE IF EXISTS    department;                
 DROP TABLE IF EXISTS    slot_interval;                
-DROP TABLE IF EXISTS    slot;   
-
-                
+DROP TABLE IF EXISTS    slot;     
 -- 1
 CREATE TABLE slot (
         name					text,
