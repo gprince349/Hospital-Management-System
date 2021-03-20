@@ -294,7 +294,7 @@ CREATE TABLE test_appointment (
         patient_id          	integer		Not null,
 
         slot_name	            text		Not null,
-        day		                integer		Not null,
+        slot_day		                integer		Not null,
         start_time	            time without time zone,
         end_time	            time without time zone,
         date_appoint		            date		Not null,

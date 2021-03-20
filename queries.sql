@@ -21,7 +21,6 @@ with max_appoints as(
         select slot_name, day, start_time , count(*)
         from appointment
         where date_appoint >= current_date and time_start > current_time
-        and status = 'scheduled'
         and doctor_id = ?
         group by slot_name, day, start_time)
 
@@ -39,6 +38,37 @@ where (count < max_appoints OR count is null)
 
 
 -- pay and confirm slot booking GIVEN(date, day, slot_name, start_time, end_time, patient_id, fee)
+-- creating a function to do booking
+-- create or replace function book_appoint(max_appoints int, cur_appoints int, 
+--         appoint_date date, start_time time, end_time time, p_id int, d_id int, slot_name text, day int, fee int)
+-- returns int
+-- language plpgsql
+-- as
+-- $$
+-- declare
+--    a integer;
+-- begin
+--     select 0 into a;
+--     if (cur_appoints >= max_appoints) then
+--         raise exception 'slot is full';
+
+--     elseif ((select balance from patient where id = p_id) < fee) then
+--         raise exception 'insufficient balance in your wallet, recharge it';
+--     else
+--         insert into appointment(date_appoint, status, doctor_id, patient_id, slot_name, slot_day, start_time, end_time)
+--         values (appoint_date, 'schedualed', d_id, p_id, slot_name, day, appoint_time, end_time);
+
+--         update patient set balance = balance - fee where id = p_id;
+
+--         insert into wallet_transaction (patient_id, amount, service)
+--         values (p_id, -fee, 'appointment booking');
+        
+--         select 1 into a;
+--     end if;
+--     return a;
+-- end;
+-- $$;
+
 -- transaction to book appointment
 BEGIN TRANSACTION;
 with max_appoints as(
@@ -56,7 +86,6 @@ with max_appoints as(
         select slot_name, day, start_time , count(*)
         from appointment
         where date_appoint >= current_date and time_start > current_time
-            and status = 'scheduled'
             and doctor_id = ? and day = ? and start_time = ?
         group by slot_name, day, start_time),
 
@@ -129,37 +158,37 @@ with R as
     R join test on (R.test_id = test.test_id);
 
 
+
 /* No_of_patients for each disease (per month , per year) grouping by age, gender, location */
 
 select P.diagnosis as disease, count(patient_id) as Num_of_patients
 from appointment as A join prescription as P on (A.id = P.appointment_id)
-group by diagnosis
-
+group by diagnosis;
 
 select date_part('year', A.date_appoint) as Year, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
 from appointment as A join prescription as P on (A.id = P.appointment_id)
-group by date_part('year', A.date_appoint),P.diagnosis
+group by date_part('year', A.date_appoint),P.diagnosis;
 
 select date_part('month', A.date_appoint) as Month, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
 from appointment as A join prescription as P on (A.id = P.appointment_id)
-group by date_part('month', A.date_appoint),P.diagnosis
+group by date_part('month', A.date_appoint),P.diagnosis;
 
 select P.diagnosis as disease, PT.gender, count(A.patient_id) as Num_of_patients
 from (appointment as A join prescription as P on (A.id = P.appointment_id)) join patient as PT on (PT.id = A.patient_id )
-group by P.diagnosis, PT.gender
+group by P.diagnosis, PT.gender;
 
 
 
 select P.diagnosis as disease, 
     case
-    when datediff(now(), PT.dob) / 365.25 > 50 then '51 & over'
-    when datediff(now(), PT.dob) / 365.25 > 19 then '20 - 30'
-    when datediff(now(), PT.dob) / 365.25 > 30 then '31 - 50'
+    when (CURRENT_DATE- PT.dob) / 365.25 > 50 then '51 & over'
+    when (CURRENT_DATE- PT.dob) / 365.25 > 19 then '20 - 30'
+    when (CURRENT_DATE- PT.dob) / 365.25 > 30 then '31 - 50'
     else 'under 20'
   end as age_group
  ,count(A.patient_id) as Num_of_patients
 from (appointment as A join prescription as P on (A.id = P.appointment_id)) join patient as PT on (PT.id = A.patient_id )
-group by P.diagnosis,  age_group
+group by P.diagnosis,  age_group;
 
 
 --Trending diseases in every season (which disease has most no of cases in particular season)
@@ -167,32 +196,41 @@ group by P.diagnosis,  age_group
 select date_part('month', A.date_appoint) as Month, P.diagnosis as disease, count(A.patient_id) as Num_of_patients
 from appointment as A join prescription as P on (A.id = P.appointment_id)
 group by date_part('month', A.date_appoint),P.diagnosis
-order by Num_of_patients DESC 
+order by Num_of_patients DESC;
 
 
 --No of Admitted patient per ward per department
 
 select dept_name, ward_num, Count(appointment_id) as Num_of_patients
 from admit 
-group by dept_name, ward_num
+group by dept_name, ward_num;
 
 
 --#Transactions and amount_transaction per day/month/year and for appointment booking with doctor, for lab_test, at pharmacy_store
-select date_part('year', Timestamp timestamp_) as Year, count(*) as Num_of_transaction
+select date_part('year',  timestamp_) as Year, count(*) as Num_of_transaction
 from real_transaction
-group by date_part('year', Timestamp timestamp_)
+group by date_part('year',  timestamp_);
 
-select date_part('year', Timestamp timestamp_) as Year, date_part('month', Timestamp timestamp_) as Month, count(*) as Num_of_transaction
+select date_part('year',  timestamp_) as Year, date_part('month',  timestamp_) as Month, count(*) as Num_of_transaction
 from real_transaction
-group by date_part('year', Timestamp timestamp_),date_part('month', Timestamp timestamp_)
+group by date_part('year',  timestamp_),date_part('month',  timestamp_);
 
 
 
-select date_part('year', Timestamp timestamp_) as Year, count(amount) as NET_Cash_flow
+select date_part('year',  timestamp_) as Year, sum(amount) as NET_Cash_flow
 from real_transaction
-group by date_part('year', Timestamp timestamp_)
+group by date_part('year',  timestamp_);
 
-select date_part('year', Timestamp timestamp_) as Year, date_part('month', Timestamp timestamp_) as Month, count(amount) as NET_Cash_flow
+select date_part('year',  timestamp_) as Year, date_part('month',  timestamp_) as Month, sum(amount) as NET_Cash_flow
 from real_transaction
-group by date_part('year', Timestamp timestamp_),date_part('month', Timestamp timestamp_)
+group by date_part('year',  timestamp_),date_part('month',  timestamp_);
+
+--medicine demands
+
+select M.id , count(*) as Quantity_sold
+from prescribed_meds as PM join medicine as M on(PM.med_id = M.id)
+group by M.id;
+
+
+
 
