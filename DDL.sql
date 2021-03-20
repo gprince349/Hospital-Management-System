@@ -310,7 +310,7 @@ CREATE TABLE test_appointment (
 
 
 
--- Triggers
+-- ================== Triggers =====================
 -- trigger to check for any delayed appointment
 -- before any INSERT/UPDATE/DELETE
 CREATE OR replace FUNCTION check_appoint_delayed()
@@ -322,12 +322,14 @@ BEGIN
     update appointment set status = 'delayed'
     where status = 'scheduled'
     and (date_appoint < current_date) OR (date_appoint = current_date and end_time < current_time);
+    return new;
 END;
 $$;
 
 create trigger check_delayed AFTER insert OR update OR delete
 on appointment
 for each statement
+when (pg_trigger_depth() = 0)
 execute procedure check_appoint_delayed();
 
 
@@ -342,12 +344,14 @@ BEGIN
     update test_appointment set status = 'delayed'
     where status = 'scheduled' 
     and (date_appoint < current_date) OR (date_appoint = current_date and end_time < current_time);
+    return new;
 END;
 $$;
 
 create trigger check_test_delayed AFTER insert OR update OR delete
 on test_appointment
 for each statement
+when (pg_trigger_depth() = 0)
 execute procedure check_test_appoint_delayed();
 
 
