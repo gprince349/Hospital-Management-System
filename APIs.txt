@@ -1,0 +1,70 @@
+1)  Authentication using JWT (id, role)
+
+2)  APIS
+    (0) Public:
+            a)  GET  /staffs
+            b)  GET  /stats
+			c)	GET	 /doctors
+
+    (1) Admin:
+            a)  POST /admin/login         		AdminLoginPage
+            b)  POST /admin/logout
+
+    (2) Staff:
+            a)  POST /staff/login         		LoginPage
+            b)  POST /staff/logout
+            c)  GET	 /staff/prescription/:id	(get presc. using appoint id, only for staff)	
+			d)	GET  /staff/report/:id			(using test_appoint id)
+			e)	GET	 /staff/appoints			(get all appointments, all staff)
+			f)	GET	 /staff/testappoints		(get all test appointments, all staff)
+			g)	GET  /staff/patientinfo/:id 		(using patient id)
+			h)	GET  /staff/patientAppoints/:id		(using patient id)
+			i)	GET  /staff/patientTestAppoints/:id	(using patient id)
+
+        Doctor:
+			a)	GET	 /doctor/freeslots/:id		(others can also access so "id" as param)
+			b)	GET	 /doctor/appoints			(appoints related to doctor)
+			c)	POST /doctor/markComplete	
+			d)	POST /doctor/cancelAppoint	
+			e)	POST /doctor/addpresc/:id		(using appoint id)
+			f)	POST /doctor/modifypresc/:id	(using appoint id)
+
+        Director:
+			a)	POST /director/addstaff
+			b)	POST /director/removestaff
+
+        Nurse:
+        Pharmacy_keeper:
+			a)	POST /pharmacy/add		
+			b)	POST /pharmacy/update
+			c)	POST /pharmacy/search
+			d)	GET  /pharmacy/all
+			e)	POST /pharmacy/checkout
+
+        Pathologist:
+			a)	POST /pathologist/update		
+			b)	POST /pathologist/addreport	
+			c)	POST /pathologist/cancelTestAppoint
+
+        Accountant:
+			a)	POST /accountant/addMoney
+			b)	POST /accountant/withdrawMoney
+
+
+    (3) Patient:
+            a)  POST /patient/login         	LoginPage
+            b)  POST /patient/logout
+            c)  GET  /patient/history			PatientHistoryPage
+            d)  POST /patient/bookAppoint
+			e)	POST /patient/bookLabAppoint
+			f)	POST /patient/addMoney
+			g)	POST /patient/withdrawMoney
+
+	(4)	Others:
+			a)	GET	 /lab/freeslots/:id
+
+
+MODELS:
+	Patient
+	Staff
+	Doctor
