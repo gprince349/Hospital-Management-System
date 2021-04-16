@@ -34,4 +34,6 @@ app.use("/pharmacy", phaRoute);
 app.use("/", pubRoute);
 
 
-app.listen(process.env.PORT);
+app.listen(Number(process.env.PORT), ()=>{
+    console.log("listning on port", process.env.PORT);
+});

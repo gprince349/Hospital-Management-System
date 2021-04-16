@@ -26,8 +26,8 @@
 			b)	GET	 /doctor/appoints			(appoints related to doctor)
 			c)	POST /doctor/markComplete	
 			d)	POST /doctor/cancelAppoint	
-			e)	POST /doctor/addpresc/:id		(using appoint id)
-			f)	POST /doctor/modifypresc/:id	(using appoint id)
+			e)	POST /doctor/addpresc
+			f)	POST /doctor/modifypresc
 
         Director:
 			a)	POST /director/addstaff
@@ -65,6 +65,36 @@
 
 
 MODELS:
+// patient.js
 	Patient
+
+// staff.js
 	Staff
 	Doctor
+	Pathologist
+	Nurse
+
+// appoint.js
+	Appointment
+	TestAppoint
+	Prescription
+
+// trans.js
+	Wallet_transaction
+	Real_transaction
+
+// dept.js
+	Department
+	Ward
+	Bed
+
+// slot.js
+	Slot
+	Slot_interval
+
+// lab.js
+	Lab
+	Test
+
+// medicine.js
+	Medicine
