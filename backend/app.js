@@ -6,7 +6,6 @@ const pool =  require('./utils/database');
 
 
 const app = express();
-
 const accRoute = require("./routes/accountant");
 const admRoute = require("./routes/admin");
 const dirRoute = require("./routes/director");
@@ -36,7 +35,7 @@ app.use("/pharmacy", phaRoute);
 app.use("/", pubRoute);
 
 
-console.log("running")
-app.listen(process.env.PORT,"",
-()=> console.log("listening on port", process.env.PORT)
-);
+
+app.listen(Number(process.env.PORT), ()=>{
+    console.log("listning on port", process.env.PORT);
+});
