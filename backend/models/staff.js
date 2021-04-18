@@ -24,9 +24,11 @@ module.exports = class Staff{
             this.dob, this.salary, this.phone, this.passwd_hash, this.address, this.slot_name];
 
             
-        pool.query(sql,values).then( res => {
+        pool.query(sql,values)
+        .then( res => {
             console.log(res);
-        });
+        })
+        .catch( err => { console.log(err)});
     }
     
 };

@@ -39,3 +39,8 @@ app.use("/", pubRoute);
 app.listen(Number(process.env.PORT), ()=>{
     console.log("listning on port", process.env.PORT);
 });
+
+Nurse = require('./models/nurse.js');
+
+// obj = new Nurse(3,'ab','cd');
+// obj.get_all();

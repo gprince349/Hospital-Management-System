@@ -26,9 +26,11 @@ module.exports =  class Patient{
        values = [this.id, this.name, this.dob, this.phone, this.passwd_hash, this.account_info,
          this.balance, this.gender, this.address, this.distric, this.state, this.country, this.height, this.weight];
             
-        pool.query(sql,values).then( res => {
+        pool.query(sql,values)
+        .then( res => {
             console.log(res);
-        });
+        })
+        .catch( err => { console.log(err)});
     }
 
 
