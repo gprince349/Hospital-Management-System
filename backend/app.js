@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const pool =  require('./utils/database');
+
 
 
 const app = express();
@@ -34,4 +36,7 @@ app.use("/pharmacy", phaRoute);
 app.use("/", pubRoute);
 
 
-app.listen(process.env.PORT);
+console.log("running")
+app.listen(process.env.PORT,"",
+()=> console.log("listening on port", process.env.PORT)
+);
