@@ -30,14 +30,18 @@ class Real_transaction{
         }
 
         add_real_transaction(){
-            var sql = 'INSERT INTO real_transaction VALUES($1,$2,$3, $4);'
+            var sql =  'BEGIN; \
+                        INSERT INTO real_transaction VALUES($1,$2,$3, $4); \
+                        Update patient set balance = balance + $4 where id = $3; \
+                        COMMIT;'
+
             var values = [this.id, this.accountant_id, this.patient_id, this.amount];
             
-            pool.query(sql,values)
-            .then( res => {
-                console.log(res);
-            })
-            .catch( err => { console.log(err)});
+            return pool.query(sql,values)
+            // .then( res => {
+            //     console.log(res);
+            // })
+            // .catch( err => { console.log(err)});
         }
 
 };

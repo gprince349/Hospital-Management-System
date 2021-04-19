@@ -1,5 +1,7 @@
 const pool = require("../utils/database");
+const { Real_transaction, Wallet_transaction } = require("./trans");
 Appointment, Test_appointment, Prescription = require('../models/appoint.js')
+Real_transaction, Wallet_transaction = require('../models/trans.js')
 
 
 class Staff{
@@ -42,8 +44,6 @@ class Staff{
 
         return pool.query(sql, values)
     }
-
-
 
     
 };
@@ -224,7 +224,7 @@ class Pathologist{
              console.log(res);
          })
          .catch( err => { console.log(err)})
-     }
+     };
  
      get_all(){
          var sql = 'Select * from pathologist ;';
@@ -232,7 +232,11 @@ class Pathologist{
          pool.query(sql, (err,res)=>{
              console.log(err,res.rows);
          })
-     }
+     };
+
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+
+     
  };
 
 class Nurse{
@@ -262,6 +266,50 @@ class Nurse{
  
      }
  };
+
+
+class Accountant{
+    constructor(id){
+             this.id = id;
+    }
+ 
+     add_accountant(){
+         var sql = 'INSERT INTO accountant VALUES ($1);';
+         
+         var values = [this.id];
+
+         pool.query(sql,values)
+         .then( res => {
+             console.log(res);
+         })
+         .catch( err => { console.log(err)})
+     };
+ 
+     get_all(){
+         var sql = 'Select * from accountant;';
+ 
+         pool.query(sql, (err,res)=>{
+             console.log(err,res.rows);
+         })
+     };
+
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+     //add money to patient wallet
+
+     static add_money(id, accountant_id, patient_id, amount){
+            const trans = new Real_transaction(id, accountant_id, patient_id, amount);
+            return trans.add_real_transaction();
+     }
+
+     //give back money from wallet
+     static return_money(id, accountant_id, patient_id, amount){
+        const trans = new Real_transaction(id, accountant_id, patient_id, amount);
+        return trans.add_real_transaction();
+    }
+
+ };
+
+
 
  
 

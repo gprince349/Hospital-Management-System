@@ -73,6 +73,7 @@ MODELS:
 	Doctor
 	Pathologist
 	Nurse
+	Accountant
 
 // appoint.js done
 	Appointment
