@@ -65,34 +65,34 @@
 
 
 MODELS:
-// patient.js
-	Patient
+// patient.js  done
+	Patient 
 
-// staff.js
+// staff.js done
 	Staff
 	Doctor
 	Pathologist
 	Nurse
 
-// appoint.js
+// appoint.js done
 	Appointment
 	TestAppoint
 	Prescription
 
-// trans.js
+// trans.js done
 	Wallet_transaction
 	Real_transaction
 
-// dept.js
+// dept.js  done
 	Department
 	Ward
 	Bed
 
-// slot.js
+// slot.js done
 	Slot
 	Slot_interval
 
-// lab.js
+// lab.js done
 	Lab
 	Test
 

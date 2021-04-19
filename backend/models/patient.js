@@ -33,6 +33,16 @@ module.exports =  class Patient{
         .catch( err => { console.log(err)});
     }
 
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+    
+    //getting patient Info
+    static get_patient_info(id){
+        const sql = 'SELE * from patient where id = $1'
+        var values = [id]
+
+        return pool.query(sql, values)
+    }
+
 
 
 };

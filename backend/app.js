@@ -15,6 +15,7 @@ const patientRoute = require("./routes/patient");
 const phaRoute = require("./routes/pharmacy");
 const pubRoute = require("./routes/public");
 const staffRoute = require("./routes/staff");
+const { Department, Ward } = require("./models/dept");
 
 // Common Middleware for all requests
 // app.use(express.json());		// to parse json
@@ -40,7 +41,8 @@ app.listen(Number(process.env.PORT), ()=>{
     console.log("listning on port", process.env.PORT);
 });
 
-Nurse = require('./models/nurse.js');
+Department, Ward, Bed = require('./models/dept.js');
 
-// obj = new Nurse(3,'ab','cd');
-// obj.get_all();
+obj = new Department('ENT1111');
+obj.add_department();
+obj.get_all();
