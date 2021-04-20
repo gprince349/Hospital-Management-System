@@ -1,8 +1,9 @@
 const pool = require("../utils/database");
+const Medicine = require("./medicine");
 const { Real_transaction, Wallet_transaction } = require("./trans");
 Appointment, Test_appointment, Prescription = require('../models/appoint.js')
 Real_transaction, Wallet_transaction = require('../models/trans.js')
-
+Medicine = require('../models/medicine.js')
 
 class Staff{
     constructor(id,name, type, gender, date_of_join, date_of_leave, dob, 		      
@@ -99,9 +100,9 @@ class Doctor{
         Update appointment  \
         Set status = “cancelled by doctor” \
         Where id = $1; \
-
+        \
         update patient set balance = balance + $3 where id = $2; \
-
+        \
         Insert into wallet_transaction (patient_id, amount, service) \
         values ($2, $3, 'refund due to cancellation by doctor'); \
         COMMIT;`
@@ -198,12 +199,8 @@ class Doctor{
     }
 
     // SEE test reports
-    static get_report(patient_id){
-        const sql = 'SELECT * from test_appointment where patient_id = $1';
-        var values = [patient_id]
-
-        return pool.query(sql,values)
-    }
+    //method in test_appointment already
+   
 
 };
 
@@ -234,9 +231,61 @@ class Pathologist{
          })
      };
 
-    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+    /////////// STATIC METHODS FOR QUERYING DATABASE ///////////////////////
 
+    //Access prescription and previous reports of patient
+     //get prescription details
+     static get_prescription(pat_id){
      
+        sql = 'SELECT * FROM appointment as A \
+        JOIN prescription as P ON (A.id = P.appointment_id) \
+        WHERE patient_id = $1'
+
+        values = [pat_id]
+        return pool.query(sql,values)
+     }
+    
+    // SEE test reports
+    //method in test_appointment already
+
+    //Take Sample
+    static take_sample(appoint_id){
+        sql = 'Update test_appointment \
+                Set status = “sample_taken” \
+                Where id = $1;'
+        values = [appoint_id]
+
+        return pool.query(sql, values)
+    }
+
+    //Add report to patient’s account
+    static add_report(path_of_result,appoint_id){
+        sql = 'Update test_appointment \
+            Set result = $1, \
+            status = “complete” \
+            Where id = $2;'
+        
+        values = [path_of_result, appoint_id]
+        
+        return pool.query(sql,values)
+    }
+
+    //cancel test_appointment ??????????? transaction id doubt?
+    static cancel_appointment(appoint_id, fee, pat_id){
+        sql = 'BEGIN; \
+            Update test_appointment Set status = “cancelled by pathologist” \
+            Where id = $1; \
+                            \
+            Update patient set balance = balance + $2 where id = $3; \
+                            \
+            Insert into wallet_transaction (patient_id, amount, service) \
+            values ($3, $2, "refund due to cancellation by pathologist"); \
+            COMMIT;'
+        values = [appoint_id, fee, pat_id]
+
+        return pool.query(sql,values)
+    }
+    
  };
 
 class Nurse{
@@ -309,8 +358,88 @@ class Accountant{
 
  };
 
+ class Pharmacy_keeper{
+    constructor(id){
+             this.id = id;
+    }
+
+    add_pharmacy_keeper(){
+        var sql = 'INSERT INTO pharmacy_keeper VALUES ($1);';
+        
+        var values = [this.id];
+
+        pool.query(sql,values)
+        .then( res => {
+            console.log(res);
+        })
+        .catch( err => { console.log(err)})
+    };
+
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+
+    //Insert medicine
+    static add_medicine(id, name, price, company, available_quantity){
+        var med = new Medicine(id, name, price, company, available_quantity)
+        return med.add_medicine()
+    }
+    //Updating the medicine entity for the new supply
+    static update_medicine(id, name, price, company, available_quantity){
+        const sql = 'UPDATE medicine \
+            SET available_quantity = $5, name = $2, price = $3, company=$4 \
+            WHERE id = $1'
+        var values = [id, name, price, company, available_quantity]
+
+        return pool.query(sql,values)
+    }
+
+    //checkavailability already method in medicine class
 
 
- 
+    //Make payment and deduct money from patient’s wallet
+    static make_payment(pat_id,amount){
+        amount = -1*amount //?????????????????check what are you passing
+        const sql = 'BEGIN; \
+                    update patient set balance = balance - $2 \
+                    where id = $1; \
+                    Insert into wallet_transaction (patient_id, amount, service) \
+                    values ($1, $2, "payment made at pharmacy"); \
+                    COMMIT;'
+        values = [pat_id, amount]
+        return pool.query(sql,values)
+    }
 
- module.exports = {Staff, Doctor, Pathologist, Nurse}
+ };
+
+ class Director{
+        constructor(id){
+            this.id = id;
+    }
+
+    add_director(){
+    var sql = 'INSERT INTO director VALUES ($1);';
+    var values = [this.id];
+
+    pool.query(sql,values)
+    .then( res => {
+        console.log(res);
+    })
+    .catch( err => { console.log(err)})
+    };
+
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+    //recruit staff
+    static add_staff(id,name, type, gender, date_of_join, date_of_leave,
+        dob,salary, phone, passwd_hash, address, slot_name){
+        var new_staff = new Staff(id,name, type, gender, date_of_join, date_of_leave,
+             dob,salary, phone, passwd_hash, address, slot_name)
+        return new_staff.add_staff();
+    }
+
+    static add_admin(){
+            
+    }
+
+
+ };
+
+ module.exports = {Staff, Doctor, Pathologist, Nurse, Accountant, Pharmacy_keeper, Director}

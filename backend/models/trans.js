@@ -10,7 +10,11 @@ class Wallet_transaction{
         }
 
         add_wallet_transaction(){
-            var sql = 'INSERT INTO wallet_transaction VALUES($1,$2,$3, $4);'
+            var sql = 'BEGIN; \
+                       INSERT INTO wallet_transaction VALUES($1,$2,$3, $4); \
+                       Update patient set balance = balance + $3 where id = $2; \
+                       COMMIT;'
+
             var values = [this.id, this.patient_id, this.amount, this.service];
             
             pool.query(sql,values)

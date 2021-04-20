@@ -59,6 +59,16 @@ class Test_appointment{
         })
         .catch( err => { console.log(err)});
     }
+
+    ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+
+    static get_report(patient_id){
+        const sql = 'SELECT * from test_appointment where patient_id = $1';
+        var values = [patient_id]
+
+        return pool.query(sql,values)
+    }
+
 };
 
 class Prescription{
