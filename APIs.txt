@@ -1,18 +1,18 @@
-1)  Authentication using JWT (id, role)
+1)  Authentication using JWT (id, type)
 
 2)  APIS
     (0) Public:
             a)  GET  /staffs
             b)  GET  /stats
 			c)	GET	 /doctors
+			d)	GET  /curUserDetails
+			e)	GET	 /logout
 
     (1) Admin:
             a)  POST /admin/login         		AdminLoginPage
-            b)  POST /admin/logout
 
     (2) Staff:
             a)  POST /staff/login         		LoginPage
-            b)  POST /staff/logout
             c)  GET	 /staff/prescription/:id	(get presc. using appoint id, only for staff)	
 			d)	GET  /staff/report/:id			(using test_appoint id)
 			e)	GET	 /staff/appoints			(get all appointments, all staff)
@@ -53,7 +53,6 @@
 
     (3) Patient:
             a)  POST /patient/login         	LoginPage
-            b)  POST /patient/logout
             c)  GET  /patient/history			PatientHistoryPage
             d)  POST /patient/bookAppoint
 			e)	POST /patient/bookLabAppoint

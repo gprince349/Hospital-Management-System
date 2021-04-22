@@ -29,21 +29,21 @@ function signAccessToken(userid, usertype){
 
 /* "jwt" cookie is set for only server-side use (i.e. httpOnly)
     for client-side user we set another cookie "jwt-helper" */
-function set_jwt_token(user, res, usertype){
-    // const token = signAccessToken(user._id, usertype);
-    // res.cookie("jwt", token, {
-    //     httpOnly:true,
-    //     // secure:true,
-    //     maxAge: COOKIE_EXPIRE_TIME,
-    // });
-    // res.cookie("jwt-helper", token, {
-    //     // secure:true,
-    //     maxAge: COOKIE_EXPIRE_TIME,
-    // });
+function set_jwt_token(res, id, type){
+    const token = signAccessToken(id, type);
+    res.cookie("jwt", token, {
+        httpOnly:true,
+        // secure:true,
+        maxAge: COOKIE_EXPIRE_TIME,
+    });
+    res.cookie("jwt-helper", token, {
+        // secure:true,
+        maxAge: COOKIE_EXPIRE_TIME,
+    });
 }
 
+// to unset cookie => make them empty with 1ms time
 function unset_jwt_tokens(res){
-    // to unset cookie => make them empty with 1ms time
     res.cookie('jwt', "", {maxAge:1});
     res.cookie('jwt-helper', "", {maxAge:1});
 }
@@ -54,21 +54,21 @@ function decodeToken(token){
 
 // middleware for authenticating clients
 function requireAuth(req, res, next){
-    // const token = req.cookies.jwt;
-    // if(token){
-    //     JWT.verify(token, process.env.SECRET, (err, decodedToken)=>{
-    //         if(err){
-    //             console.log(file, err.message, "Unauthorized access denied1");
-    //             res.send({error:"Unauthorized access denied1"})
-    //         }else{
-    //             // console.log(file, decodedToken);
-    //             next();
-    //         }
-    //     });
-    // }else{
-    //     console.log(file, ": Unauthorized access denied2")
-    //     res.send({error:"Unauthorized access denied2"})
-    // }
+    const token = req.cookies.jwt;
+    if(token){
+        JWT.verify(token, process.env.SECRET, (err, decodedToken)=>{
+            if(err){
+                console.log(file, err.message, "Unauthorized access denied1");
+                res.send({error:"Unauthorized access denied1"})
+            }else{
+                // console.log(file, decodedToken);
+                next();
+            }
+        });
+    }else{
+        console.log(file, ": Unauthorized access denied2")
+        res.send({error:"Unauthorized access denied2"})
+    }
 }
 
 module.exports = {

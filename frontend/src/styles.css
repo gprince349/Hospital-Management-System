@@ -1,1 +1,105 @@
 /* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* ================== */
+/* Navbar CSS */
+/* ================== */
+
+.logo{
+    outline: none;
+}
+.logo:hover{
+    cursor: pointer;
+}
+
+.navbar{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: aqua;
+}
+
+.navbar h1{
+    margin: 0;
+}
+
+.nav-links button{
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+/* ================== */
+/* some common CSS */
+/* ================== */
+.container{
+    margin: auto;
+    padding: 1rem;
+}
+.center{
+    text-align: center;
+}
+.fit-content{
+    width: fit-content;
+    margin: 0;
+    padding: 0;
+}
+.clickable{
+    color: blue;
+    text-decoration: underline;
+}
+.clickable:hover{
+    cursor: pointer;
+}
+.error{
+    color: red;
+}
+.tile{
+    background-color: #d6d6d6;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin: auto 1rem;
+    padding: 0 0.5rem;
+}
+/* ================== */
+/* Side Navbar CSS */
+/* ================== */
+.dash-container {
+    width: 100%;
+    height: 100%;
+}
+.dash-sidenav {
+    padding: 20px;
+}
+.menu-toggle-btn{
+    z-index: 999;
+    float: left;
+}
+
+/* ==================== */
+/* admin tables */
+/* ==================== */
+/* .admin-table {
+    font-family: Arial;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+.admin-table td, .admin-table th {
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+  
+.admin-table tr:nth-child(even){background-color: #f2f2f2;}
+  
+.admin-table tr:hover {background-color: #ddd;}
+  
+.admin-table th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
+    background-color: #5e63df;
+    color: white;
+} */

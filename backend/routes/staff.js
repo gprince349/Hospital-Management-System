@@ -2,7 +2,6 @@ const router = require("express").Router();
 const staff = require("../controllers/staff")
 
 router.post("/login", staff.post_login);
-router.post("/logout", staff.post_logout);
 
 router.get("/prescription/:id", staff.get_prescription);
 router.get("/report/:id", staff.get_report);
