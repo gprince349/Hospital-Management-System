@@ -2,9 +2,11 @@ require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const pool =  require('./utils/database');
+
+
 
 const app = express();
-
 const accRoute = require("./routes/accountant");
 const admRoute = require("./routes/admin");
 const dirRoute = require("./routes/director");
@@ -14,6 +16,7 @@ const patientRoute = require("./routes/patient");
 const phaRoute = require("./routes/pharmacy");
 const pubRoute = require("./routes/public");
 const staffRoute = require("./routes/staff");
+const { Department, Ward } = require("./models/dept");
 
 // CORS to handle cross origine requests
 app.use(cors({credentials:true, origin:process.env.ALLOWED_ORIGIN}));
@@ -38,6 +41,13 @@ app.use("/pharmacy", phaRoute);
 app.use("/", pubRoute);
 
 
+
 app.listen(Number(process.env.PORT), ()=>{
     console.log("listning on port", process.env.PORT);
 });
+
+Department, Ward, Bed = require('./models/dept.js');
+
+obj = new Department('ENT1111');
+obj.add_department();
+obj.get_all();

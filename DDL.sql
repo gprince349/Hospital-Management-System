@@ -25,9 +25,7 @@ DROP TABLE IF EXISTS    lab;
 DROP TABLE IF EXISTS    ward;                   
 DROP TABLE IF EXISTS    department;                
 DROP TABLE IF EXISTS    slot_interval;                
-DROP TABLE IF EXISTS    slot;   
-
-                
+DROP TABLE IF EXISTS    slot;     
 -- 1
 CREATE TABLE slot (
         name					text,
@@ -184,7 +182,6 @@ CREATE TABLE appointment(
         status		            text	Not Null check(status in ('scheduled', 'complete', 'delayed', 'cancelled by doctor', 'cancelled')),
         doctor_id	            integer	Not null,
         patient_id	            integer	Not null,
-
         slot_name	            text	Not null,
         slot_day	            integer	Not null,
         start_time		        time without time zone	Not null,
@@ -238,7 +235,7 @@ CREATE TABLE admit (
 -- 20
 CREATE TABLE prescription(
         appointment_id		    integer,
-		diagnosis				text 	Not null,
+	diagnosis				text 	Not null,
         remarks		            text,
         Primary key(appointment_id),
 	Foreign key(appointment_id) references appointment on delete Cascade
@@ -292,7 +289,6 @@ CREATE TABLE test_appointment (
         timestamp_	            timestamp without time zone	Default current_timestamp,
         pathologist_id          integer,
         patient_id          	integer		Not null,
-
         slot_name	            text		Not null,
         slot_day		                integer		Not null,
         start_time	            time without time zone,
