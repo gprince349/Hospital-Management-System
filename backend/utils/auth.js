@@ -62,6 +62,7 @@ function requireAuth(req, res, next){
                 res.send({error:"Unauthorized access denied1"})
             }else{
                 // console.log(file, decodedToken);
+                res.locals.dtoken = decodedToken;
                 next();
             }
         });

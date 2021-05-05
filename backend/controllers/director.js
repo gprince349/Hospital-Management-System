@@ -4,8 +4,8 @@ exports.post_addstaff = (req, res) => {
     try{
         res.status(200).json({msg: "director addstaff success"});
     }catch(e){
-        console.log(file, e.messsage);
-        res.status(200).json({error: e.messsage});
+        console.log(file, e.message);
+        res.status(200).json({error: e.message});
     }
 }
 
@@ -13,7 +13,7 @@ exports.post_removestaff = (req, res) => {
     try{
         res.status(200).json({msg: "director removestaff success"});
     }catch(e){
-        console.log(file, e.messsage);
-        res.status(200).json({error: e.messsage});
+        console.log(file, e.message);
+        res.status(200).json({error: e.message});
     }
 }

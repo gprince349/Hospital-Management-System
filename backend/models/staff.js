@@ -1,9 +1,6 @@
 const pool = require("../utils/database");
 const Medicine = require("./medicine");
 const { Real_transaction, Wallet_transaction } = require("./trans");
-Appointment, Test_appointment, Prescription = require('../models/appoint.js')
-Real_transaction, Wallet_transaction = require('../models/trans.js')
-Medicine = require('../models/medicine.js')
 
 class Staff{
     constructor(id,name, type, gender, date_of_join, date_of_leave, dob, 		      
@@ -39,14 +36,19 @@ class Staff{
     ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
 
     /// FOR LOGIN
-    static get_staff(phone, passwd_hash){
-        var sql = 'Select * from staff where phone=$1 and passwd_hash=$2';
-        var values = [phone, passwd_hash];
+    static get_staff(phone){
+        var sql = 'Select * from staff where phone=$1';
+        var values = [phone];
 
         return pool.query(sql, values)
     }
 
-    
+    static get_staff_info(id){
+        var sql = 'Select * from staff where id=$1';
+        var values = [id];
+
+        return pool.query(sql, values)
+    }
 };
 
 
@@ -184,7 +186,7 @@ class Doctor{
                       SELECT * from R join medicine as M on(R.med_id = M.id)'
 
 
-        const sql2 = 'With R as (Select * from prescribed_tests Where prescription_id = $1;) \
+        const sql3 = 'With R as (Select * from prescribed_tests Where prescription_id = $1;) \
                         SELECT * from R join test as T on(R.test_id = T.id)'
 
 
