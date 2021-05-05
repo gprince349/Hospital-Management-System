@@ -301,7 +301,7 @@ CREATE TABLE test_appointment (
         Foreign Key(test_id) references Test,
         Foreign Key(patient_id) references patient,
         Foreign Key(pathologist_id) references pathologist,
-        Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
+        Foreign Key(slot_name,slot_day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
 
 
