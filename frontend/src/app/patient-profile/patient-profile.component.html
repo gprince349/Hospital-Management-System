@@ -1,4 +1,4 @@
-<div class="center">
+<div *ngIf="curUser" class="center">
     
     <form [formGroup]="detailFrom" (ngSubmit)="update()">
         <div formGroupName="phone">

@@ -1,27 +1,36 @@
-const CommonMenu = [
-    {title:"Dashboard", path:"./"},
-    {title:"Profile", path:"./profile"}
+const CommonStaff = [
+    {title:"Dashboard",     path:"./staffDashboard"},
+    {title:"Profile",       path:"./staffProfile"}
 ];
 
 const Menu ={
     'patient' : [
+        {title:"Dashboard",     path:"./patDashboard"},
+        {title:"Profile",       path:"./patProfile"},
         {title:"Book Appointment", path:"./bookAppoint"},
         {title:"Book Test Appoint", path:"./bookTestAppoint"},
-        {title:"History", path:"./history"},
+        {title:"Add Moeny",     path:"./addMoney"},
+        {title:"Withdraw Moeny", path:"./withdrawMoney"},
+        {title:"History",       path:"./patHistory"},
     ],
-    'doctor' : [
-        {title:"Appointments", path:"appoints"},
-        {title:"History", path:"history"},
-    ],
-    'admin' : [
-        {title:"Staff", path:"staff"},
-        {title:"Labs", path:"labs"},
-    ],
-    'nurse' : [],
-    'pathologist' : [],
-    'pharmacy_keeper' : [],
-    'accountant' : [],
-    'director' : []
+    'doctor' : CommonStaff.concat([
+        {title:"Appointments",  path:"./appoints"},
+        {title:"History",       path:"./docHistory"},
+    ]),
+    'admin' : CommonStaff.concat([
+        {title:"Staff",         path:"./staff"},
+        {title:"Labs",          path:"./labs"},
+    ]),
+    'nurse' : CommonStaff.concat([
+    ]),
+    'pathologist' : CommonStaff.concat([
+    ]),
+    'pharmacy_keeper' : CommonStaff.concat([
+    ]),
+    'accountant' : CommonStaff.concat([
+    ]),
+    'director' : CommonStaff.concat([
+    ])
 }
 
 export class User{
@@ -32,6 +41,6 @@ export class User{
     }
 
     getMenu(){
-        return CommonMenu.concat(Menu[this.details["type"]]);
+        return Menu[this.details["type"]];
     }
 };

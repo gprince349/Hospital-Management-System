@@ -2,6 +2,7 @@ let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const Patient = require("../models/patient");
 const CONS = require("../utils/constants")
+const bcrypt = require("bcrypt");
 
 exports.get_history = (req, res) => {
     try{
