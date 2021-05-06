@@ -228,6 +228,5 @@ module.exports =  class Patient{
     //     var values = [id]
 
     //     return pool.query(sql, values)
-    }
 
 };
