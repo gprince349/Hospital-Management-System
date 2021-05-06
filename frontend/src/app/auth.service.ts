@@ -19,7 +19,7 @@ export class AuthService {
 
   constructor(private router:Router, private api:ApiService) { }
 
-  // Do login a after successful login goto redirectUrl OR dashboard
+  // Will login and on successful login goto redirectUrl OR dashboard
   login(path:string, phone:string, passwd:string){
     return this.api.post(path, {phone:phone, password:passwd}, {}).pipe( 
       map( (res) => {
@@ -31,6 +31,19 @@ export class AuthService {
         return res;
       }));
   }
+
+  // Will register and on successful registration goto redirectUrl OR dashboard
+  register(path:string, phone:string, passwd:string){
+      return this.api.post(path, {phone:phone, password:passwd}, {}).pipe( 
+        map( (res) => {
+          if(this.isLoggedIn()){
+            let url = this.redirectUrl || "/dashboard";
+            this.redirectUrl = undefined;
+            this.router.navigate([url]);
+          }
+          return res;
+        }));
+    }
 
   logout(){
     this.api.get('/logout', {}).subscribe( data => {
