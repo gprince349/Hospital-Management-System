@@ -14,7 +14,7 @@ module.exports =  class Patient{
             this.balance     = balance;            
             this.gender      = gender;           
             this.address     = address;            
-            this.distric     = district;       t     
+            this.district     = district;    
             this.state       = state;          
             this.country     = country;            
             this.height      = height;           
@@ -37,12 +37,45 @@ module.exports =  class Patient{
     
     //getting patient Info
     static get_patient_info(id){
-        const sql = 'SELE * from patient where id = $1'
+        const sql = 'SELECT * from patient where id = $1;'
         var values = [id]
 
         return pool.query(sql, values)
     }
 
+    static add_to_balance(id,amount){
+        const sql = 'UPDATE patient SET balance = balance + $2 where id = $1;'
+        var values = [id,amount]
 
+        return pool.query(sql, values)
+    }
+
+    static deduct_from_balance(id,amount){
+        const sql = 'UPDATE patient SET balance = balance - $2 where id = $1;'
+        var values = [id,amount]
+
+        return pool.query(sql, values)
+    }
+
+    // static get_patient_info(id){
+    //     const sql = 'SELECT * from patient where id = $1;'
+    //     var values = [id]
+
+    //     return pool.query(sql, values)
+    // }
+
+    // static get_patient_info(id){
+    //     const sql = 'SELECT * from patient where id = $1;'
+    //     var values = [id]
+
+    //     return pool.query(sql, values)
+    // }
+
+    // static get_patient_info(id){
+    //     const sql = 'SELECT * from patient where id = $1;'
+    //     var values = [id]
+
+    //     return pool.query(sql, values)
+    }
 
 };
