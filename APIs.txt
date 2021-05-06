@@ -13,6 +13,7 @@
 
     (2) Staff:
             a)  POST /staff/login         		LoginPage
+			b)  POST /staff/update
             c)  GET	 /staff/prescription/:id	(get presc. using appoint id, only for staff)	
 			d)	GET  /staff/report/:id			(using test_appoint id)
 			e)	GET	 /staff/appoints			(get all appointments, all staff)
@@ -53,11 +54,13 @@
 
     (3) Patient:
             a)  POST /patient/login         	LoginPage
-            c)  GET  /patient/history			PatientHistoryPage
-            d)  POST /patient/bookAppoint
-			e)	POST /patient/bookLabAppoint
+			b)	POST /patient/register
+			c)	POST /patient/update
+            d)  GET  /patient/history			PatientHistoryPage
+            e)  POST /patient/bookAppoint
+			f)	POST /patient/bookLabAppoint
 			f)	POST /patient/addMoney
-			g)	POST /patient/withdrawMoney
+			h)	POST /patient/withdrawMoney
 
 	(4)	Others:
 			a)	GET	 /lab/freeslots/:id

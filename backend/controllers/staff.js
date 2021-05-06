@@ -3,6 +3,7 @@ const auth = require("../utils/auth");
 const bcrypt = require("bcrypt")
 const { Staff } = require("../models/staff")
 
+// to handle POST request for staff login
 exports.post_login = async (req, res) => {
     try{
         let {phone, password} = req.body;
@@ -25,7 +26,23 @@ exports.post_login = async (req, res) => {
         res.status(200).json({error: e.message});
     }
 }
+// to handle POST request to update details staff
+exports.post_update_details = async (req, res) => {
+    try{
+        let name = req.body.name;
+        let dob = req.body.dob;
+        let gender = req.body.gender;
+        let address = req.body.address;
 
+        let ID = res.locals.dtoken["id"];
+        await Staff.update_details(ID, name, dob, gender, address);
+
+        res.status(200).json({msg: "Basic Details updated successfully"});
+    }catch(e){
+        console.log(file, e.stack);
+        res.status(200).json({error: e.message});
+    }
+}
 
 exports.get_prescription = (req, res) => {
     try{

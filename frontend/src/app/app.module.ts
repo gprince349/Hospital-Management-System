@@ -19,6 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ProfileComponent } from './profile/profile.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { PatientProfileComponent } from './patient-profile/patient-profile.component'
 
 @NgModule({
   declarations: [
@@ -28,7 +31,8 @@ import { ProfileComponent } from './profile/profile.component';
     RegisterComponent,
     DashboardComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
+    PatientProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,9 @@ import { ProfileComponent } from './profile/profile.component';
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -33,8 +33,8 @@ export class AuthService {
   }
 
   // Will register and on successful registration goto redirectUrl OR dashboard
-  register(path:string, phone:string, passwd:string){
-      return this.api.post(path, {phone:phone, password:passwd}, {}).pipe( 
+  register(path:string, data){
+      return this.api.post(path, data, {}).pipe( 
         map( (res) => {
           if(this.isLoggedIn()){
             let url = this.redirectUrl || "/dashboard";
@@ -67,9 +67,9 @@ export class AuthService {
     return false;
   }
 
-  getCurUser(){
+  getCurUser(forceFetch=false){
     if(this.isLoggedin){
-      if(this.curUser){
+      if( !forceFetch && this.curUser){
         return of(this.curUser);
       }else{
         return this.api.get("/curUserDetails", {}).pipe(

@@ -3,21 +3,20 @@ const Medicine = require("./medicine");
 const { Real_transaction, Wallet_transaction } = require("./trans");
 
 class Staff{
-    constructor(id,name, type, gender, date_of_join, date_of_leave, dob, 		      
+    constructor(name, type, gender, date_of_join, date_of_leave, dob, 		      
         salary, phone, passwd_hash, address, slot_name){
 
-            this.id            = id;      
-            this.name          = name;        
-            this.type          = type;					t
-            this.gender        = gender;   
+            this.name          = name;
+            this.type          = type;
+            this.gender        = gender;
             this.date_of_join  = date_of_join;
             this.date_of_leave = date_of_leave;
-            this.dob           = dob 		  ; 		      
-            this.salary        = salary 	; 		   
-            this.phone         = phone 		; 		    
+            this.dob           = dob;
+            this.salary        = salary;
+            this.phone         = phone;
             this.passwd_hash   = passwd_hash;
-            this.address       = address 	 ; 	   
-            this.slot_name     = slot_name	;	  
+            this.address       = address;
+            this.slot_name     = slot_name
     }
 
     add_staff(){
@@ -25,11 +24,8 @@ class Staff{
         var values = [this.id, this.name, this.type, this.gender, this.date_of_join, this.date_of_leave,
             this.dob, this.salary, this.phone, this.passwd_hash, this.address, this.slot_name];
 
-            
         pool.query(sql,values)
-        .then( res => {
-            console.log(res);
-        })
+        .then( res => { console.log(res); })
         .catch( err => { console.log(err)});
     }
 
@@ -48,6 +44,14 @@ class Staff{
         var values = [id];
 
         return pool.query(sql, values)
+    }
+
+    static update_details(ID, name, gender, dob, address){
+        const sql = "UPDATE staff SET (name, gender, dob, address) = ($2,$3,$4,$5)\
+                    WHERE ID = $1";
+        const values = [ID, name, gender, dob, address];
+        
+        return pool.query(sql, values);
     }
 };
 
