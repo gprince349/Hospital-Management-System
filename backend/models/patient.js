@@ -37,12 +37,19 @@ module.exports =  class Patient{
     
     //getting patient Info
     static get_patient_info(id){
-        const sql = 'SELE * from patient where id = $1'
+        const sql = 'SELECT * from patient where id = $1'
         var values = [id]
 
         return pool.query(sql, values)
     }
 
+    static patient_login(phone, passwd_hash){
+        const sql = 'Select * from patient where phone = $1 and passwd_hash = $2;'
+
+        var values = [phone, passwd_hash]
+
+        return pool.query(sql, values)
+    }
 
 
 };

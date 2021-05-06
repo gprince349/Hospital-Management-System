@@ -97,15 +97,15 @@ class Doctor{
     ///Cancelling appointment
     static cancel_appointment(appoint_id, patient_id, fee){
         const sql = `BEGIN; \
-        Update appointment  \
-        Set status = “cancelled by doctor” \
-        Where id = $1; \
-        \
-        update patient set balance = balance + $3 where id = $2; \
-        \
-        Insert into wallet_transaction (patient_id, amount, service) \
-        values ($2, $3, 'refund due to cancellation by doctor'); \
-        COMMIT;`
+                Update appointment  \
+                Set status = “cancelled by doctor” \
+                Where id = $1; \
+                \
+                update patient set balance = balance + $3 where id = $2; \
+                \
+                Insert into wallet_transaction (patient_id, amount, service) \
+                values ($2, $3, 'refund due to cancellation by doctor'); \
+                COMMIT;`
 
         var values = [appoint_id, patient_id, fee];
         return pool.query(sql, values)
