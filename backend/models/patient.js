@@ -254,6 +254,41 @@ module.exports =  class Patient{
         return pool.query(sql, values)
     }
 
+    static book_test_appoint(test_id, slot_name, start_time, date, patient_id, pathologist_id){
+        const sql = "insert into test_appointment (test_id, timestamp_, pathologist_id, patient_id, slot_name, slot_day, start_time, end_time, date_appoint, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+        let date_ob = new Date();
+        let curdate = ("0" + date_ob.getDate()).slice(-2);
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+        let year = date_ob.getFullYear();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let seconds = date_ob.getSeconds();
+        let curDate=year + "-" + month + "-" + curdate;
+        let curTime=hours + ":" + minutes + ":" + seconds;
+        let day=date_ob.getDay();
+
+        var start_hour= parseInt(start_time.split(":")[0])
+        var start_mins= parseInt(start_time.split(":")[1])
+        var end_mins="0";
+        start_hour=(start_hour+1)%24;
+        
+        var end_hour=start_hour.toString();
+        var end_time=end_hour+":"+end_mins;
+        // console.log(start_hour);
+
+        const values=[test_id, curDate+" "+curTime, pathologist_id,patient_id, slot_name, day, start_time,end_time, date, "scheduled"]
+        console.log(test_id)
+        return pool.query(sql, values)
+    }
+
+    static verify_appointment(id, appointment_id,test_id)
+    {
+        const sql = 'select * from appointment a inner join prescribed_tests p on (a.id = p.prescription_id) where patient_id = $1 and p.prescription_id=$2 and test_id=$3 order by date_appoint;'
+        var values = [id, appointment_id,test_id]
+        return pool.query(sql,values);
+    }
+
     // static get_patient_info(id){
     //     const sql = 'SELECT * from patient where id = $1;'
     //     var values = [id]

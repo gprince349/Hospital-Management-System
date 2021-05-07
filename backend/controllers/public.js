@@ -1,7 +1,7 @@
 let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const Patient = require("../models/patient")
-const { Staff } = require("../models/staff")
+const { Staff , Doctor} = require("../models/staff")
 
 exports.get_curUserDetails = async (req, res) => {
     try{
@@ -56,11 +56,10 @@ exports.get_staffs = (req, res) => {
 
 exports.get_doctors = (req, res) => {
     try{
-        res.status(200).json([
-            {name:"A", id:"12"},
-            {name:"B", id:"13"},
-            {name:"C", id:"14"},
-        ]);
+        var obj = Doctor.get_doctor_list();
+        obj.then(result => {
+            res.status(200).json({msg: "public get doctors success", result});
+        })
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});

@@ -46,8 +46,16 @@ app.listen(Number(process.env.PORT), ()=>{
     console.log("listning on port", process.env.PORT);
 });
 
-// const { Department, Ward } = require("./models/dept");
+const Patient  = require("./models/patient");
 
 // obj = new Department('ENT1111');
 // obj.add_department();
 // obj.get_all();
+
+// var obj = Patient.book_slot(101);
+// obj.then(result =>{
+//     console.log(result)
+// }).catch(err=>{
+//     console.log(err)
+// }
+// )
