@@ -6,33 +6,27 @@ select *
 from staff s inner join doctor d using (id)
 
 -- get available slot_intervals GIVEN (id)
-with max_appoints as(
-    select appoints_per_slot from doctor where id = ?),
-
-    d_slot_name as(
-        select slot_name from staff where id = ?),
-
-    slots(slot_name, day, start_time, end_time) as(
+with slots(slot_name, day, start_time, end_time) as(
         select * 
         from slot_interval
-        where name = d_slot_name),
+        where name = (select slot_name from staff where id = 5)),
 
     slot_count(slot_name, day, start_time, count) as(
-        select slot_name, day, start_time , count(*)
+        select slot_name, slot_day, start_time , count(*)
         from appointment
-        where date_appoint >= current_date and time_start > current_time
-        and doctor_id = ?
-        group by slot_name, day, start_time)
+        where date_appoint >= current_date and start_time > current_time
+        and doctor_id = 5
+        group by slot_name, slot_day, start_time)
 
-select slot_name, day, start_time, end_time, coalasce(count, 0),
-        (case when (day = extract(dow from current_date) and start_time =< current_time)
+select slot_name, day, start_time, end_time, coalesce(count, 0),
+        (case when (day = extract(dow from current_date) and start_time < current_time)
                     then current_date + 7
              when (day = extract(dow from current_date) and start_time > current_time)
                     then current_date
-             else current_date + MOD(day - extract(dow from current_date) + 7, 7)
+             else current_date + MOD(cast(day - extract(dow from current_date) + 7 AS INTEGER), 7)
         end) as "date"
 from slots left outer join slot_count using(slot_name, day, start_time)
-where (count < max_appoints OR count is null)
+where (count < (select appoints_per_slot from doctor where id = 5) OR count is null);
 
 
 

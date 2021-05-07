@@ -52,10 +52,10 @@ const Patient  = require("./models/patient");
 // obj.add_department();
 // obj.get_all();
 
-var obj = Patient.book_slot(101);
-obj.then(result =>{
-    console.log(result)
-}).catch(err=>{
-    console.log(err)
-}
-)
+// var obj = Patient.book_slot(101);
+// obj.then(result =>{
+//     console.log(result)
+// }).catch(err=>{
+//     console.log(err)
+// }
+// )

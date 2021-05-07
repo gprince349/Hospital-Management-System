@@ -26,11 +26,7 @@ const routes: Routes = [
             { path: "patDashboard", component: PatDashboardComponent},
             { path: "patProfile", component: PatientProfileComponent},
             { path: "staffProfile", component: StaffProfileComponent},
-            { path: "bookAppoint", component: Page404Component},
-            { path: "bookTestAppoint", component: Page404Component},
-            { path: "addMoney", component: Page404Component},
-            { path: "withdrawMoney", component: Page404Component},
-            { path: "staffProfile", component: PatientProfileComponent},
+            
             { path: "bookAppoint", component: AppointmentComponent},
             { path: "bookTestAppoint", component: TestAppointComponent},
             { path: "addMoney", component: AddMoneyComponent},

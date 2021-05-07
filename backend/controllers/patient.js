@@ -119,12 +119,12 @@ exports.post_addMoney = (req, res) => {
         // var amount = req.body.amount
         // const obj  = Real_transaction("", patient_id, amount);
         // obj.add_real_transaction();
-
         // console.log("Added Money");
         let amount = req.body.amount;
         let ID = res.locals.dtoken["id"];
         Patient.add_money(ID, amount);
         Patient.add_real_transaction(ID, amount);
+        console.log("added")
         res.status(200).json({msg: "patient add money success"});
 
     }catch(e){
@@ -145,7 +145,9 @@ exports.post_withdrawMoney = (req, res) => {
         let ID = res.locals.dtoken["id"];
         
         Patient.withdraw_money(ID, amount);
+        Patient.add_real_transaction(ID, -1*amount);
         res.status(200).json({msg: "patient withdraw money success"});
+
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});

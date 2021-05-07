@@ -5,6 +5,7 @@ const CONST = require("../utils/constants")
 
 exports.get_freeslot = (req, res) => {
     try{
+        let docid = req.params.id;
         res.status(200).json({msg: "doctor freeslot success"});
     }catch(e){
         console.log(file, e.message);
