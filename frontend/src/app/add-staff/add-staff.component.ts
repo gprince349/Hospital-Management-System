@@ -40,6 +40,7 @@ export class AddStaffComponent implements OnInit {
 
         this.detailFrom = this.fb.group({
           phone:phone,
+          password:['', [Validators.required, Validators.minLength(6)]],
           name: ["", [Validators.required]],
           dob: ["", [Validators.required]],
           gender: ["", [Validators.required]],
@@ -61,6 +62,7 @@ export class AddStaffComponent implements OnInit {
     let data = {
       name: this.name.value,
       phone:phone, 
+      password: this.password.value,
       dob: this.dob.value,
       gender: this.gender.value,
       address: this.address.value,
@@ -83,6 +85,7 @@ export class AddStaffComponent implements OnInit {
 
   get ccode(){ return this.detailFrom.get('phone.country_code'); }
   get phone(){ return this.detailFrom.get('phone.phone'); }
+  get password(){ return this.detailFrom.get('password'); }
 
   get name(){ return this.detailFrom.get('name'); }
   get dob(){ return this.detailFrom.get('dob'); }

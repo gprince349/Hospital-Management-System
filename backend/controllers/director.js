@@ -1,5 +1,7 @@
 const { Director, Nurse, Doctor, Pathologist, Accountant, Pharmacy_keeper } = require("../models/staff");
 const { adminStr } = require("../utils/constants");
+const auth = require("../utils/auth");
+const CONST = require("../utils/constants")
 
 let file = __filename.slice(__dirname.length + 1);
 
@@ -17,9 +19,12 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-exports.post_addstaff = (req, res) => {
+exports.post_addstaff = async (req, res) => {
     try{
-        var obj = Director.add_staff(
+        if(res.locals.dtoken["type"] != CONST.directorStr && res.locals.dtoken["type"] != CONST.adminStr){
+            throw Error("Only director and admin can access this api");
+        }
+        var obj = await Director.add_staff(
             req.body.name, 
             req.body.type, 
             req.body.gender, 
@@ -28,12 +33,10 @@ exports.post_addstaff = (req, res) => {
             req.body.dob,
             req.body.salary, 
             req.body.phone, 
-            req.body.passwd_hash, 
+            await auth.hash_passwd(req.body.password),
             req.body.address, 
             req.body.slot_name )
-        obj.then(result =>{
-            res.status(200).json({msg: "director addstaff success"});
-        })
+
 
         if(req.body.type == "Nurse"){
             var obj = new Nurse(req.body.id, req.body.dept_name, req.body.ward_num);
@@ -69,10 +72,11 @@ exports.post_addstaff = (req, res) => {
             var obj = new Admin(req.body.id);
             obj.add_admin();
         }
-        
+
+        res.status(200).json({msg: "director addstaff success"});
 
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -81,7 +85,7 @@ exports.post_removestaff = (req, res) => {
     try{
         res.status(200).json({msg: "director removestaff success"});
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }

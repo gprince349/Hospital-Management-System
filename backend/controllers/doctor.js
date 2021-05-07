@@ -20,24 +20,13 @@ exports.get_freeslot = async (req, res) => {
 }
 
 
-exports.get_appoints = (req, res) => {
+exports.get_appoints = async (req, res) => {
     try{
-        
         if(res.locals.dtoken["type"] != CONST.doctorStr){
             throw Error("Only doctors can access this api");
         }
-
-        var obj = Doctor.see_appointment(req.body.doctor_id)
-        obj.then(result=>{
-            console.log(result)
-            res.status(200).json([{msg: "doctor appoints success"}, result.rows]);
-        })
-
-        // res.status(200).json([
-        //     {a:"appoint1"},
-        //     {a:"appoint2"},
-        //     {a:"appoint3"}
-        // ]);
+        var obj = await Doctor.see_appointment(req.body.doctor_id)
+        res.status(200).json(obj.rows);
 
     }catch(e){
         console.log(file, e.stack);
