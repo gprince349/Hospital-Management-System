@@ -7,7 +7,7 @@ router.post("/login",   patient.post_login);
 router.post("/register", patient.post_register);
 router.post("/update",  auth.requireAuth, patient.post_update_details);
 router.post("/bookAppoint", auth.requireAuth, patient.post_bookAppoint);
-router.post("/addMoney",    auth.requireAuth, patient.post_addMoeny);
+router.post("/addMoney",    auth.requireAuth, patient.post_addMoney);
 router.post("/withdrawMoney", auth.requireAuth, patient.post_withdrawMoney);
 
 

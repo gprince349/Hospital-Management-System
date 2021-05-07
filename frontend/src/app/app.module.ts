@@ -21,7 +21,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ProfileComponent } from './profile/profile.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { PatientProfileComponent } from './patient-profile/patient-profile.component'
+import { PatientProfileComponent } from './patient-profile/patient-profile.component';
+import { AppointmentComponent } from './appointment/appointment.component';
+import { AddMoneyComponent } from './add-money/add-money.component';
+import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
+import { TestAppointComponent } from './test-appoint/test-appoint.component'
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { PatientProfileComponent } from './patient-profile/patient-profile.compo
     DashboardComponent,
     HomeComponent,
     ProfileComponent,
-    PatientProfileComponent
+    PatientProfileComponent,
+    AppointmentComponent,
+    AddMoneyComponent,
+    WithdrawMoneyComponent,
+    TestAppointComponent
   ],
   imports: [
     BrowserModule,

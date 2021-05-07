@@ -53,6 +53,37 @@ module.exports =  class Patient{
         return pool.query(sql, values)
     }
 
+    
+
+    static add_money(id, amount){
+        console.log(id);
+        const sql = 'update patient set balance = balance + $1 where id = $2;'
+        const values = [amount,id];
+
+        return pool.query(sql,values)
+    }
+
+    static withdraw_money(id, amount){
+        console.log(id);
+        const sql = 'update patient set balance = balance - $1 where id = $2 and balance >= $1;'
+        const values = [amount,id];
+
+        return pool.query(sql,values)
+    }
+
+    static add_real_transaction(id,amount){
+        var sql =  'INSERT INTO real_transaction (accountant_id, patient_id, amount) VALUES (NULL,$2, $1);'
+                    
+
+        var values = [amount, id];
+        
+        return pool.query(sql,values)
+        // .then( res => {
+        //     console.log(res);
+        // })
+        // .catch( err => { console.log(err)});
+    }
+
     static update_details(ID,name,dob,account_info,gender,address,district,state,country,height,weight){
         const sql = 'UPDATE patient SET (name,dob,account_info,gender,address,district,state,country,height,weight)\
                 = ($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)\
@@ -226,6 +257,11 @@ module.exports =  class Patient{
         return pool.query(sql,values)
     }
 
+    static book_appoint(doctor_id, slot_id, date){
+        
+        // 
+
+    }
 
     // static get_patient_info(id){
     //     const sql = 'SELECT * from patient where id = $1;'
