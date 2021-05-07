@@ -1,6 +1,7 @@
 let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const bcrypt = require("bcrypt")
+const CONST = require("../utils/constants")
 const { Staff } = require("../models/staff")
 
 // to handle POST request for staff login
@@ -30,13 +31,14 @@ exports.post_login = async (req, res) => {
 // to handle POST request to update details staff
 exports.post_update_details = async (req, res) => {
     try{
+        if(res.locals.dtoken["type"] == CONST.patientStr){
+            throw Error("API access by invalid user");
+        }
         let name = req.body.name;
-        let dob = req.body.dob;
-        let gender = req.body.gender;
         let address = req.body.address;
 
         let ID = res.locals.dtoken["id"];
-        await Staff.update_details(ID, name, dob, gender, address);
+        await Staff.update_details(ID, name, address);
 
         res.status(200).json({msg: "Basic Details updated successfully"});
     }catch(e){

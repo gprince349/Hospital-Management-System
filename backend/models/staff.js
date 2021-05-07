@@ -45,10 +45,10 @@ class Staff{
         return pool.query(sql, values)
     }
 
-    static update_details(ID, name, gender, dob, address){
-        const sql = "UPDATE staff SET (name, gender, dob, address) = ($2,$3,$4,$5)\
+    static update_details(ID, name, address){
+        const sql = "UPDATE staff SET (name, address) = ($2,$3)\
                     WHERE ID = $1";
-        const values = [ID, name, gender, dob, address];
+        const values = [ID, name, address];
         
         return pool.query(sql, values);
     }

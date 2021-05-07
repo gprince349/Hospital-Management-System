@@ -26,7 +26,7 @@
 			a)	GET	 /doctor/freeslots/:id		(others can also access so "id" as param)
 			b)	GET	 /doctor/appoints			(appoints related to doctor)
 			c)	POST /doctor/markComplete	
-			d)	POST /doctor/cancelAppoint	
+			d)	POST /doctor/cancelAppoint
 			e)	POST /doctor/addpresc
 			f)	POST /doctor/modifypresc
 

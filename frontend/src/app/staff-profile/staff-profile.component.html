@@ -20,13 +20,17 @@
             <input matInput type="text" placeholder="Your Name" formControlName="name">
         </mat-form-field>
 
+        <mat-form-field>
+            <input matInput type="text" placeholder="Type" formControlName="type">
+        </mat-form-field>
+        <br>
+
         <mat-form-field appearance="">
             <mat-label>Select you DOB</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <br>
         
         <mat-form-field appearance="">
             <mat-label>Gender</mat-label>
@@ -39,7 +43,20 @@
         <br>
 
         <mat-form-field>
-            <input matInput type="number" placeholder="Account Number" formControlName="account_info">
+            <input matInput type="text" placeholder="Joining Date" formControlName="date_of_joining">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" placeholder="Date of Leave" formControlName="date_of_leave">
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput type="text" placeholder="Salary" formControlName="salary">
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" placeholder="Slot Name" formControlName="slot_name">
         </mat-form-field>
         <br>
 
@@ -47,26 +64,6 @@
             <input matInput type="text" placeholder="Address" formControlName="address">
         </mat-form-field>
 
-        <mat-form-field>
-            <input matInput type="text" placeholder="District" formControlName="district">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput type="text" placeholder="State" formControlName="state">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput type="text" placeholder="Country" formControlName="country">
-        </mat-form-field>
-        <br>
-
-        <mat-form-field>
-            <input matInput type="text" placeholder="Height" formControlName="height">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput type="text" placeholder="Weight" formControlName="weight">
-        </mat-form-field>
         <br>
         <br>
         <button mat-raised-button color="primary" type="submit" 

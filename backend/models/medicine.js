@@ -23,6 +23,14 @@ module.exports =  class Medicine{
 
     ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
 
+    static get_all()
+    {
+        sql = 'SELECT * FROM medicine;'
+
+        // values = [id]
+        return pool.query(sql)
+    }
+    
     static check_availability(id){
         sql = 'SELECT * FROM medicine \
         WHERE id = $1 ;'
