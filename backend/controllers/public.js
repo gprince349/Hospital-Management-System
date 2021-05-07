@@ -76,12 +76,10 @@ exports.get_logout = (req, res) => {
 }
 
 
-exports.get_slots = (req, res) => {
+exports.get_slots = async (req, res) => {
     try{    
-        var obj = Slot.get_all_slot()
-        obj.then(result =>{
-            res.status(200).json({msg: "logout success", result});
-        })
+        var obj = await Slot.get_all_slot()
+        res.status(200).json(obj.rows);
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});

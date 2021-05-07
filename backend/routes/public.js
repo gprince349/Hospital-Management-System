@@ -5,6 +5,7 @@ const auth = require("../utils/auth")
 
 router.get("/curUserDetails", auth.requireAuth, pub.get_curUserDetails);
 router.get("/stats", pub.get_stats);
+router.get("/slots", pub.get_slots);
 router.get("/staffs", pub.get_staffs);
 router.get("/doctors", pub.get_doctors);
 router.get("/logout", pub.get_logout);

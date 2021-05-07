@@ -3,7 +3,7 @@ const auth = require("../utils/auth");
 const Patient = require("../models/patient");
 const lab = require("../models/lab")
 const Real_transaction = require("../models/trans");
-const CONS = require("../utils/constants")
+const CONST = require("../utils/constants")
 const bcrypt = require("bcrypt");
 
 exports.get_history = (req, res) => {
@@ -25,7 +25,7 @@ exports.post_login = async (req, res) => {
             const verified = bcrypt.compareSync(password, tup["passwd_hash"])
             if(verified){
                 // login succeeded
-                auth.set_jwt_token(res, tup["id"], CONS.patientStr);
+                auth.set_jwt_token(res, tup["id"], CONST.patientStr);
                 res.status(200).json({msg: `patient login success`});
             }else{
                 throw Error("Login failed: Invalid password!!");
@@ -56,7 +56,7 @@ exports.post_register = async (req, res) => {
             // once saved successfully set the cookies and send it
             let savedPat = await Patient.get_patient(phone);
             if(savedPat.rowCount > 0){
-                auth.set_jwt_token(res, savedPat.rows[0]["id"], CONS.patientStr);
+                auth.set_jwt_token(res, savedPat.rows[0]["id"], CONST.patientStr);
                 res.status(200).json({msg: `patient registration success`});
             }else{
                 throw Error("Some error on server side. Please try again.");

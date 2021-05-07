@@ -1,6 +1,6 @@
-<div *ngIf="curUser" class="center">
+<div *ngIf="detailFrom" class="center">
     
-    <form [formGroup]="detailFrom" (ngSubmit)="update()">
+    <form [formGroup]="detailFrom" (ngSubmit)="addstaff()">
         <h3 style="align-self:flex-start;">Basic Details</h3>
         <div formGroupName="phone">
             <mat-form-field>
@@ -45,8 +45,8 @@
 		<mat-form-field appearance="">
             <mat-label>Slot Name</mat-label>
             <mat-select formControlName="slot_name">
-              <mat-option *ngFor="let sn of slotNames" [value]="sn">
-                {{sn | titlecase}}
+              <mat-option *ngFor="let sn of slotNames" [value]="sn['name']">
+                {{sn['name'] | titlecase}}
               </mat-option>
             </mat-select>
         </mat-form-field>
@@ -66,10 +66,34 @@
         </mat-form-field>
 		<br>
 
-        <br>
+		<div *ngIf="type.value=='doctor'">
+			<mat-form-field >
+				<input matInput type="text" placeholder="Department" formControlName="dept_name">
+			</mat-form-field>
+			<mat-form-field >
+				<input matInput type="text" placeholder="Fee" formControlName="fee">
+			</mat-form-field>
+			<br>
+			<mat-form-field >
+				<input matInput type="text" placeholder="Room No." formControlName="room_no">
+			</mat-form-field>
+			<mat-form-field >
+				<input matInput type="text" placeholder="Appoints per slot" formControlName="appoints_per_slot">
+			</mat-form-field>
+		</div>
+
+		<div *ngIf="type.value=='nurse'">
+			<mat-form-field >
+				<input matInput type="text" placeholder="Department" formControlName="dept_name">
+			</mat-form-field>
+			<mat-form-field >
+				<input matInput type="text" placeholder="Ward Num" formControlName="ward_num">
+			</mat-form-field>
+		</div>
+
         <br>
         <button mat-raised-button color="primary" type="submit" 
-                [disabled]="!(detailFrom.valid && detailFrom.dirty)">Update Details</button>
+                [disabled]="!(detailFrom.valid && detailFrom.dirty)">Add Staff</button>
 
         <mat-error>
             {{errmsg}}
