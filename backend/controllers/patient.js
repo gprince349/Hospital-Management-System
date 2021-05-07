@@ -102,6 +102,10 @@ exports.post_bookAppoint = (req, res) => {
         let start_time = req.body.start_time;
         // console.log(start_time);
         let date = req.body.date;
+        dateob=new Date(date);
+        // console.log(dateob.getMonth());
+        date=dateob.getFullYear()+"-"+("0" + (dateob.getMonth() + 1)).slice(-2)+"-"+("0" + dateob.getDate()).slice(-2);
+        
         let ID = res.locals.dtoken["id"];
         Patient.book_appoint(doctor_id, slot_name, start_time, date, ID);
         res.status(200).json({msg: "patient book appointment success"});
