@@ -1,0 +1,24 @@
+<div *ngIf="curUser" class="center">
+    
+    <form [formGroup]="addFrom" (ngSubmit)="add()">
+        <div>
+            
+            <mat-form-field>
+                <input matInput type="number" placeholder="Amount" formControlName="amount">
+                
+            </mat-form-field>
+        </div>
+
+        <br>
+        <br>
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!(addFrom.valid && addFrom.dirty)">Add Amount</button>
+
+        <mat-error>
+            {{errmsg}}
+        </mat-error>
+        <h4 style="color: green;">{{successMsg}}</h4>
+        <br><br>
+    </form>
+
+</div>

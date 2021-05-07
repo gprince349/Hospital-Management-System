@@ -11,6 +11,10 @@ import { PatientProfileComponent } from './patient-profile/patient-profile.compo
 import { RegisterComponent } from './register/register.component';
 import { StaffDashboardComponent } from './staff-dashboard/staff-dashboard.component';
 import { StaffProfileComponent } from './staff-profile/staff-profile.component';
+import { AppointmentComponent } from './appointment/appointment.component';
+import { TestAppointComponent } from './test-appoint/test-appoint.component';
+import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
+import { AddMoneyComponent } from './add-money/add-money.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
@@ -26,6 +30,11 @@ const routes: Routes = [
             { path: "bookTestAppoint", component: Page404Component},
             { path: "addMoney", component: Page404Component},
             { path: "withdrawMoney", component: Page404Component},
+            { path: "staffProfile", component: PatientProfileComponent},
+            { path: "bookAppoint", component: AppointmentComponent},
+            { path: "bookTestAppoint", component: TestAppointComponent},
+            { path: "addMoney", component: AddMoneyComponent},
+            { path: "withdrawMoney", component: WithdrawMoneyComponent},
             { path: "patHistory", component: Page404Component},
             { path: "appoints", component: DocAppointsComponent},
             { path: "docHistory", component: Page404Component},

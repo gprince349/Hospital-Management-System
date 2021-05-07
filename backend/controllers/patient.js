@@ -1,6 +1,7 @@
 let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const Patient = require("../models/patient");
+const Real_transaction = require("../models/trans");
 const CONS = require("../utils/constants")
 const bcrypt = require("bcrypt");
 
@@ -94,6 +95,10 @@ exports.post_update_details = async (req, res) => {
 
 exports.post_bookAppoint = (req, res) => {
     try{
+        let doctor_id=req.body.doctor_id;
+        let slot_id = req.body.slot_id;
+        let date = req.body.date;
+        Patient.book_appoint(doctor_id, slot_id, date);
         res.status(200).json({msg: "patient book appointment success"});
     }catch(e){
         console.log(file, e.stack);
@@ -101,8 +106,13 @@ exports.post_bookAppoint = (req, res) => {
     }
 }
 
-exports.post_addMoeny = (req, res) => {
+exports.post_addMoney = (req, res) => {
     try{
+        // console.log("Added Money");
+        let amount = req.body.amount;
+        let ID = res.locals.dtoken["id"];
+        Patient.add_money(ID, amount);
+        Patient.add_real_transaction(ID, amount);
         res.status(200).json({msg: "patient add money success"});
     }catch(e){
         console.log(file, e.stack);
@@ -112,6 +122,10 @@ exports.post_addMoeny = (req, res) => {
 
 exports.post_withdrawMoney = (req, res) => {
     try{
+        let amount = req.body.amount;
+        let ID = res.locals.dtoken["id"];
+        
+        Patient.withdraw_money(ID, amount);
         res.status(200).json({msg: "patient withdraw money success"});
     }catch(e){
         console.log(file, e.stack);
