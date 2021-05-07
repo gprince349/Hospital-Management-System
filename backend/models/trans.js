@@ -26,8 +26,7 @@ class Wallet_transaction{
 };
 
 class Real_transaction{
-        constructor(id, accountant_id, patient_id, amount){
-            this.id = id;
+        constructor(accountant_id, patient_id, amount){
             this.accountant_id = accountant_id;
             this.patient_id = patient_id;
             this.amount = amount;
@@ -35,11 +34,11 @@ class Real_transaction{
 
         add_real_transaction(){
             var sql =  'BEGIN; \
-                        INSERT INTO real_transaction VALUES($1,$2,$3, $4); \
-                        Update patient set balance = balance + $4 where id = $3; \
+                        INSERT INTO real_transaction(accountant_id, patient_id, amount) VALUES($1,$2,$3); \
+                        Update patient set balance = balance + $3 where id = $2; \
                         COMMIT;'
 
-            var values = [this.id, this.accountant_id, this.patient_id, this.amount];
+            var values = [this.accountant_id, this.patient_id, this.amount];
             
             return pool.query(sql,values)
             // .then( res => {

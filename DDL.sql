@@ -26,6 +26,28 @@ DROP TABLE IF EXISTS    ward;
 DROP TABLE IF EXISTS    department;                
 DROP TABLE IF EXISTS    slot_interval;                
 DROP TABLE IF EXISTS    slot;     
+
+-- ================================================
+--  		 Trigger to set id_serial
+-- 		(on manual input value for id) as max()
+-- ================================================
+
+CREATE OR REPLACE FUNCTION set_serial_id_seq()
+RETURNS trigger AS
+$BODY$
+  BEGIN
+   EXECUTE (FORMAT('SELECT setval(''%s_%s_seq'', (SELECT MAX(%s) from %s));',
+   TG_TABLE_NAME,
+   TG_ARGV[0],
+   TG_ARGV[0],
+   TG_TABLE_NAME));
+    RETURN OLD;
+   END;
+$BODY$
+LANGUAGE plpgsql;  
+-- ================================================
+
+
 -- 1
 CREATE TABLE slot (
         name					text,
@@ -43,7 +65,7 @@ CREATE TABLE slot_interval (
 );
 -- 3
 CREATE TABLE lab(
-        id			        	integer,
+        id			        	serial,
         name			        text    Not null,
         address		         	text    Not null,
         appoints_per_slot	   	integer	Not Null 	check(appoints_per_slot >= 0 ),
@@ -51,6 +73,13 @@ CREATE TABLE lab(
         Primary key(id),
         Foreign key (slot_name) references slot
 );
+-- ================================================
+CREATE TRIGGER set_lab_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON lab
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 -- 4
 CREATE TABLE department ( 
@@ -69,13 +98,13 @@ CREATE TABLE ward (
 );
 -- 6
 CREATE TABLE patient (
-        id		                integer,
+        id		                serial,
         name 		            text,
         dob 		            date	Not Null,
         phone  		            text	Not Null 	Unique,
         passwd_hash				text 	Not null,
 		account_info 	        text,
-        balance 	            integer	Not null	check (balance >= 0 ),
+        balance 	            integer	Not null	check (balance >= 0 ) Default 0,
         gender 	                text	Not null	Check (gender in('male','female','other')),
 		address 	            text,
 		district				text,
@@ -87,10 +116,17 @@ CREATE TABLE patient (
 		
         Primary Key(id)
 );
+-- ================================================
+CREATE TRIGGER set_patient_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON patient
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 -- 7
 CREATE TABLE staff (
-        id                  	integer,
+        id                  	serial,
         name                	text    NOT NULL,
 		type 					text	Not Null,
         gender              	text	Not null Check (gender in('male','female','other')),
@@ -106,6 +142,13 @@ CREATE TABLE staff (
         Primary Key(id),
         Foreign Key(slot_name) references slot(name)
 );
+-- ================================================
+CREATE TRIGGER set_staff_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON staff
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 -- 8
 CREATE TABLE accountant (	
@@ -176,7 +219,7 @@ CREATE TABLE bed (
 
 -- 16
 CREATE TABLE appointment(
-        id			            integer,
+        id			            serial,
         timestamp_			    timestamp without time zone		Default current_timestamp,
         date_appoint		    date 	Not Null,
         status		            text	Not Null check(status in ('scheduled', 'complete', 'delayed', 'cancelled by doctor', 'cancelled')),
@@ -192,11 +235,17 @@ CREATE TABLE appointment(
         Foreign Key(patient_id) references patient,
         Foreign Key(slot_name, slot_day, start_time) references slot_interval(name,day,start_time) on delete set Null
 );
-
+-- ================================================
+CREATE TRIGGER set_appointment_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON appointment
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 -- 17
 CREATE TABLE wallet_transaction ( 
-        id 		                 integer,
+        id 		                 serial,
         patient_id 	             integer,
         amount		             integer	NOT NULL,
         service 	             text		Not Null,
@@ -204,10 +253,17 @@ CREATE TABLE wallet_transaction (
         Primary Key(id),
         Foreign Key(patient_id) references patient on delete set Null
 );
+-- ================================================
+CREATE TRIGGER set_wallet_transaction_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON wallet_transaction
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 -- 18
 CREATE TABLE real_transaction (
-        id 		                 integer,
+        id 		                 serial,
         accountant_id	         integer,
         patient_id          	 integer,
         amount		             integer 	Not Null,
@@ -216,6 +272,14 @@ CREATE TABLE real_transaction (
         Foreign Key(patient_id) references patient on delete set Null,
         Foreign Key(accountant_id) references accountant(id) on delete set Null
 );
+-- ================================================
+CREATE TRIGGER set_real_transaction_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON real_transaction
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
+
 -- 19
 CREATE TABLE admit (
         appointment_id          integer,
@@ -255,13 +319,21 @@ CREATE TABLE test (
 
 -- 22
 CREATE TABLE medicine (
-        id		                integer,
+        id		                serial,
         name		            text		Not null,
         price		            integer 	Not null	check(price >=0 ),
         company	                text		Not null,
         available_quantity	    integer		Not null	check(available_quantity >= 0 ),
         Primary key(id)
 );
+-- ================================================
+CREATE TRIGGER set_medicine_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON medicine
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
+
 -- 23
 CREATE TABLE prescribed_tests (
         prescription_id		    integer,
@@ -284,7 +356,7 @@ CREATE TABLE prescribed_meds (
 
 -- 25
 CREATE TABLE test_appointment (
-        id		                integer,
+        id		                serial,
         test_id		            integer		Not null,
         timestamp_	            timestamp without time zone	Default current_timestamp,
         pathologist_id          integer,
@@ -301,9 +373,15 @@ CREATE TABLE test_appointment (
         Foreign Key(test_id) references Test,
         Foreign Key(patient_id) references patient,
         Foreign Key(pathologist_id) references pathologist,
-        Foreign Key(slot_name,day,start_time) references slot_interval(name,day,start_time) on delete set Null
+        Foreign Key(slot_name,slot_day,start_time) references slot_interval(name,day,start_time) on delete set Null
 );
-
+-- ================================================
+CREATE TRIGGER set_test_appointment_id_seq
+AFTER INSERT OR UPDATE OR DELETE
+ON test_appointment
+FOR EACH STATEMENT
+  EXECUTE PROCEDURE  set_serial_id_seq('id');
+-- ================================================
 
 
 

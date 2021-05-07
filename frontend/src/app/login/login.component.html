@@ -1,0 +1,39 @@
+<div class="center">
+    
+    <p>Not a {{userType | titlecase}}? login as a <a class="clickable" (click)="toggleUserType()">
+        {{other | titlecase}}</a></p>
+    <hr width="50%">
+    <h2>Login as a "{{userType | titlecase}}"</h2>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div formGroupName="phone">
+            <mat-form-field>
+                <input matInput type="text" placeholder="country code" formControlName="country_code">
+                <mat-error *ngIf="ccode.invalid">
+                    country code is of type "+xx"
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="text" placeholder="phone number" formControlName="phone">
+                <mat-error *ngIf="phone.invalid">
+                    enter a 10 digit number
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-form-field>
+            <input matInput type="password" placeholder="password" formControlName="password">
+            <mat-error *ngIf="password.invalid">
+                password length must be >= 6
+            </mat-error>
+        </mat-form-field>
+        <br><br>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Submit</button>
+
+        <mat-error>
+            {{errmsg}}
+        </mat-error>
+    </form>
+
+    <hr width="50%">
+    <p style="text-align: center;">Not a user? <a routerLink="/register">register</a></p>
+</div>
