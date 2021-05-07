@@ -30,6 +30,8 @@ const Menu ={
     'accountant' : CommonStaff.concat([
     ]),
     'director' : CommonStaff.concat([
+        {title:"Add staff",     path:"./addStaff"},
+        {title:"Remove staff",  path:"./removeStaff"},
     ])
 }
 

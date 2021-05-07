@@ -18,7 +18,7 @@ with slots(slot_name, day, start_time, end_time) as(
         and doctor_id = 5
         group by slot_name, slot_day, start_time)
 
-select slot_name, day, start_time, end_time, coalesce(count, 0),
+select slot_name, day, start_time, end_time, coalesce(count, 0) as bookings,
         (case when (day = extract(dow from current_date) and start_time < current_time)
                     then current_date + 7
              when (day = extract(dow from current_date) and start_time > current_time)
@@ -26,7 +26,8 @@ select slot_name, day, start_time, end_time, coalesce(count, 0),
              else current_date + MOD(cast(day - extract(dow from current_date) + 7 AS INTEGER), 7)
         end) as "date"
 from slots left outer join slot_count using(slot_name, day, start_time)
-where (count < (select appoints_per_slot from doctor where id = 5) OR count is null);
+where (count < (select appoints_per_slot from doctor where id = 5) OR count is null)
+order by date ASC;
 
 
 

@@ -142,37 +142,6 @@ module.exports =  class Patient{
         return pool.query(sql,values);
     }
 
-    static book_slot(id)
-    {
-        const sql = 'with max_appoints as( \\\
-                select appoints_per_slot from doctor where id = $1), \\\
-                d_slot_name as( \\\
-                select slot_name from staff where id = $1), \\\
-                slots(slot_name, day, start_time, end_time) as( \\\
-                select *  \\\
-                from slot_interval \\\
-                where name = d_slot_name), \\\
-                slot_count(slot_name, day, start_time, count) as( \\\
-                select slot_name, day, start_time , count(*) \\\
-                from appointment \\\
-                where date_appoint >= current_date and time_start > current_time \\\
-                and doctor_id = $1 \\\
-                group by slot_name, day, start_time) \\\
-                \\\
-                select slot_name, day, start_time, end_time, coalesce(count, 0), \\\
-                (case when (day = extract(dow from current_date) and start_time =< current_time)\\\
-                            then current_date + 7\\\
-                     when (day = extract(dow from current_date) and start_time > current_time)\\\
-                            then current_date\\\
-                     else current_date + MOD(day - extract(dow from current_date) + 7, 7)\\\
-                end) as "date"\\\
-                from slots left outer join slot_count using(slot_name, day, start_time)\\\
-                where (count < max_appoints OR count is null)\\\
-                ;'
-        var values = [id]
-
-        return pool.query(sql,values);
-    }
 
     static make_payement_doc(d_id,day,time,date,p_id,fee)
     {

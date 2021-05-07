@@ -202,9 +202,32 @@ class Doctor{
 
     }
 
+    static get_free_slots(id){
+        const sql = 'with slots(slot_name, day, start_time, end_time) as(\
+                            select * \
+                            from slot_interval\
+                            where name = (select slot_name from staff where id = $1)),\
+                        slot_count(slot_name, day, start_time, count) as(\
+                            select slot_name, slot_day, start_time , count(*)\
+                            from appointment\
+                            where date_appoint >= current_date and start_time > current_time\
+                            and doctor_id = $1\
+                            group by slot_name, slot_day, start_time)\
+                    select slot_name, day, start_time, end_time, coalesce(count, 0) as bookings,\
+                            (case when (day = extract(dow from current_date) and start_time < current_time)\
+                                        then current_date + 7\
+                                when (day = extract(dow from current_date) and start_time > current_time)\
+                                        then current_date\
+                                else current_date + MOD(cast(day - extract(dow from current_date) + 7 AS INTEGER), 7)\
+                            end) as "date"\
+                    from slots left outer join slot_count using(slot_name, day, start_time)\
+                    where (count < (select appoints_per_slot from doctor where id = $1) OR count is null)\
+                    order by date ASC;';
+        var values = [id]
+        return pool.query(sql, values);
+    }
     // SEE test reports
     //method in test_appointment already
-   
 
 };
 

@@ -15,6 +15,8 @@ import { AppointmentComponent } from './appointment/appointment.component';
 import { TestAppointComponent } from './test-appoint/test-appoint.component';
 import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
 import { AddMoneyComponent } from './add-money/add-money.component';
+import { AddStaffComponent } from './add-staff/add-staff.component';
+import { RemoveStaffComponent } from './remove-staff/remove-staff.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
@@ -26,7 +28,7 @@ const routes: Routes = [
             { path: "patDashboard", component: PatDashboardComponent},
             { path: "patProfile", component: PatientProfileComponent},
             { path: "staffProfile", component: StaffProfileComponent},
-            
+
             { path: "bookAppoint", component: AppointmentComponent},
             { path: "bookTestAppoint", component: TestAppointComponent},
             { path: "addMoney", component: AddMoneyComponent},
@@ -36,6 +38,8 @@ const routes: Routes = [
             { path: "docHistory", component: Page404Component},
             { path: "staff", component: Page404Component},
             { path: "labs", component: Page404Component},
+            { path: "addStaff", component: AddStaffComponent},
+            { path: "removeStaff", component: RemoveStaffComponent},
             { path: "**", component: Page404Component},
           ]
   },

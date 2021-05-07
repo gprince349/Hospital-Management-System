@@ -29,7 +29,9 @@ import { DocAppointsComponent } from './doc-appoints/doc-appoints.component'
 import { AppointmentComponent } from './appointment/appointment.component';
 import { AddMoneyComponent } from './add-money/add-money.component';
 import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
-import { TestAppointComponent } from './test-appoint/test-appoint.component'
+import { TestAppointComponent } from './test-appoint/test-appoint.component';
+import { AddStaffComponent } from './add-staff/add-staff.component';
+import { RemoveStaffComponent } from './remove-staff/remove-staff.component'
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { TestAppointComponent } from './test-appoint/test-appoint.component'
     AppointmentComponent,
     AddMoneyComponent,
     WithdrawMoneyComponent,
-    TestAppointComponent
+    TestAppointComponent,
+    AddStaffComponent,
+    RemoveStaffComponent
   ],
   imports: [
     BrowserModule,

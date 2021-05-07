@@ -3,10 +3,16 @@ const { Staff, Doctor } = require("../models/staff")
 
 const CONST = require("../utils/constants")
 
-exports.get_freeslot = (req, res) => {
+exports.get_freeslot = async (req, res) => {
     try{
         let docid = req.params.id;
-        res.status(200).json({msg: "doctor freeslot success"});
+        let slots = await Doctor.get_free_slots(docid);
+        if(slots.rowCount > 0){
+            console.log(slot.rows);
+            res.status(200).json(slots.rows);
+        }else{
+            throw Error("No free slot available");
+        }
     }catch(e){
         console.log(file, e.message);
         res.status(200).json({error: e.message});
