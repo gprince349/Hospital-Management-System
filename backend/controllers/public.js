@@ -56,7 +56,11 @@ exports.get_staffs = (req, res) => {
 
 exports.get_doctors = (req, res) => {
     try{
-        res.status(200).json({msg: "public get doctors success"});
+        res.status(200).json([
+            {name:"A", id:"12"},
+            {name:"B", id:"13"},
+            {name:"C", id:"14"},
+        ]);
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});

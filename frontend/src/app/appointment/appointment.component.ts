@@ -11,71 +11,61 @@ import { User } from '../models';
   styleUrls: ['./appointment.component.css']
 })
 export class AppointmentComponent implements OnInit {
-  curUser:User;
+
   errmsg:string="";
   successMsg:string="";
-  genderVal:string[] = ["male", "female", 'other'];
-  appointFrom:FormGroup;
-  constructor(private auth:AuthService,
-    private router:Router,
+  docForm:FormGroup;
+  docList;
+  slotForm:FormGroup;
+  slotList;
+  DOC;
+  SLOT;
+
+  constructor(
     private api:ApiService,
     private fb:FormBuilder) { }
 
   ngOnInit(): void {
-    this.auth.getCurUser(true).subscribe(u => {
-      if(u instanceof Error){
-        console.log(u);
-        this.curUser = undefined;
-      }else{
-        this.curUser = u;
+    this.api.get("/doctors", {}).subscribe(data => {
+      console.log(data);
+      this.docList = data;
 
-        this.appointFrom = this.fb.group({
-          doctor_id:["",[
-            Validators.required,
-            Validators.pattern('^[0-9]*$')
-          ]],
-          slot_name:["",[
-            Validators.required,
-          ]],
-          start_time:["",[
-            Validators.required,
-          ]],
-          date:["",[
-              Validators.required
-          ]]
-        });
-      }
+      this.docForm = this.fb.group({
+        doctor:["",[
+          Validators.required,
+        ]]
+      });
+    })
+  }
+
+  next(){
+    console.log(this.doctor.value);
+    let docid = this.doctor.value["id"];
+    this.api.get(`/doctor/freeslots/${docid}`, {}).subscribe(data => {
+      this.slotList = data;
+      this.slotForm = this.fb.group({
+        slot:["", [
+          Validators.required,
+        ]]
+      })
     })
   }
 
   book(){
-    this.api.post("/patient/bookAppoint", {
-      doctor_id:this.doctor_id.value,
-      slot_name:this.slot_name.value,
-      start_time:this.start_time.value,
-      date:this.date.value
-    }, {})
-    .subscribe((res) => {
-      console.log(res);
-      this.errmsg = res['error'];
+    let slot = this.slot.value;
+    console.log(slot);
+    this.DOC = this.doctor.value;
+    this.SLOT = slot;
+  }
+
+  checkout(){
+    this.api.post("/patient/bookAppoint", {}, {}).subscribe( res => {
+      this.errmsg = res["error"];
       this.successMsg = res["msg"];
     })
   }
 
-  get_slots(){
-    this.api.get("/doctor/freeslots/"+this.doctor_id.value, {
-      doctor_id:this.doctor_id.value
-    })
-    .subscribe((res) => {
-      console.log(res);
-      this.errmsg = res['error'];
-      this.successMsg = res["msg"];
-    })
-  }
-
-  get doctor_id(){ return this.appointFrom.get('doctor_id');}
-  get slot_name(){ return this.appointFrom.get('slot_name');}
-  get start_time(){ return this.appointFrom.get('start_time');}
-  get date(){ return this.appointFrom.get('date');}
+  get doctor(){ return this.docForm.get('doctor');}
+  get slot(){ return this.slotForm.get('slot');}
 
 }
