@@ -24,7 +24,7 @@ exports.post_addstaff = async (req, res) => {
         if(res.locals.dtoken["type"] != CONST.directorStr && res.locals.dtoken["type"] != CONST.adminStr){
             throw Error("Only director and admin can access this api");
         }
-        console.log(req.body)
+        // console.log(req.body)
         var obj = await Director.add_staff(
             req.body.name, 
             req.body.type, 
@@ -42,7 +42,6 @@ exports.post_addstaff = async (req, res) => {
         var id = 0
         var id_obj = await Staff.get_staff(req.body.phone)
         id = id_obj.rows[0]['id'];
-        console.log(id) 
 
         if(req.body.type == "nurse"){
             var obj = new Nurse(id, req.body.dept_name, req.body.ward_num);
@@ -50,6 +49,7 @@ exports.post_addstaff = async (req, res) => {
         }
         
         if(req.body.type == "doctor"){
+            console.log(id)
             var obj = new Doctor(
                 id,
                 req.body.dept_name,
@@ -60,22 +60,22 @@ exports.post_addstaff = async (req, res) => {
             obj.add_doctor();
         }
         if(req.body.type == "pathologist"){
-            var obj = new Pathologist(req.body.id);
+            var obj = new Pathologist(id);
             obj.add_pathologist();
         }
 
         if(req.body.type == "accountant"){
-            var obj = new Accountant(req.body.id);
+            var obj = new Accountant(id);
             obj.add_accountant();
         }
 
         if(req.body.type == "pharmacy_keeper"){
-            var obj = new Pharmacy_keeper(req.body.id);
+            var obj = new Pharmacy_keeper(id);
             obj.add_pharmacy_keeper();
         }
 
         if(req.body.type == "admin"){
-            var obj = new Admin(req.body.id);
+            var obj = new Admin(id);
             obj.add_admin();
         }
 
@@ -89,6 +89,7 @@ exports.post_addstaff = async (req, res) => {
 
 exports.post_removestaff = (req, res) => {
     try{
+        
         res.status(200).json({msg: "director removestaff success"});
     }catch(e){
         console.log(file, e.stack);
