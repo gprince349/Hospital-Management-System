@@ -67,6 +67,9 @@ exports.post_register = async (req, res) => {
 // to handle POST request to update details
 exports.post_update_details = async (req, res) => {
     try{
+        if(res.locals.dtoken["type"] != CONST.patientStr){
+            throw Error("API access by invalid user");
+        }
         let name = req.body.name;
         let dob = req.body.dob;
         let account_info = req.body.account_info;

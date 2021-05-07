@@ -1,0 +1,10 @@
+<div class="center">
+
+    <div *ngIf="appoints">
+        <ul>
+            <li *ngFor="let appoint of appoints">{{appoint | json}}</li>
+        </ul>
+    </div>
+
+    <h4 style="color: red;">{{errMsg}}</h4>
+</div>

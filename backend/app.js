@@ -3,6 +3,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const pool =  require('./utils/database');
+const auth = require("./utils/auth");
 
 
 
@@ -31,12 +32,12 @@ app.use((req, res, next) => {
 
 app.use("/admin", admRoute);
 app.use("/staff", staffRoute);
-app.use("/doctor", docRoute);
-app.use("/director", dirRoute);
-app.use("/pathologist", pathoRoute);
-app.use("/accountant", accRoute);
+app.use("/doctor", auth.requireAuth, docRoute);
+app.use("/director", auth.requireAuth, dirRoute);
+app.use("/pathologist", auth.requireAuth, pathoRoute);
+app.use("/accountant", auth.requireAuth, accRoute);
 app.use("/patient", patientRoute);
-app.use("/pharmacy", phaRoute);
+app.use("/pharmacy", auth.requireAuth, phaRoute);
 app.use("/", pubRoute);
 
 

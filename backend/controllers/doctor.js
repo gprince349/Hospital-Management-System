@@ -1,4 +1,5 @@
 let file = __filename.slice(__dirname.length + 1);
+const CONST = require("../utils/constants")
 
 exports.get_freeslot = (req, res) => {
     try{
@@ -11,7 +12,15 @@ exports.get_freeslot = (req, res) => {
 
 exports.get_appoints = (req, res) => {
     try{
-        res.status(200).json({msg: "doctor appoints success"});
+        if(res.locals.dtoken["type"] != CONST.doctorStr){
+            throw Error("Only doctors can access this api");
+        }
+
+        res.status(200).json([
+            {a:"appoint1"},
+            {a:"appoint2"},
+            {a:"appoint3"}
+        ]);
     }catch(e){
         console.log(file, e.message);
         res.status(200).json({error: e.message});

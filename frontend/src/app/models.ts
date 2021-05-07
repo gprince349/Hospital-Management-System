@@ -10,7 +10,7 @@ const Menu ={
         {title:"Book Appointment", path:"./bookAppoint"},
         {title:"Book Test Appoint", path:"./bookTestAppoint"},
         {title:"Add Moeny",     path:"./addMoney"},
-        {title:"Withdraw Moeny", path:"./withdrawMoney"},
+        {title:"Withdraw Money", path:"./withdrawMoney"},
         {title:"History",       path:"./patHistory"},
     ],
     'doctor' : CommonStaff.concat([

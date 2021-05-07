@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
 import { User } from '../models';
 
 @Component({
-  selector: 'app-patient-profile',
-  templateUrl: './patient-profile.component.html',
-  styleUrls: ['./patient-profile.component.css']
+  selector: 'app-staff-profile',
+  templateUrl: './staff-profile.component.html',
+  styleUrls: ['./staff-profile.component.css']
 })
-export class PatientProfileComponent implements OnInit {
+export class StaffProfileComponent implements OnInit {
   curUser:User;
   errmsg:string="";
   successMsg:string="";
@@ -43,38 +42,29 @@ export class PatientProfileComponent implements OnInit {
         this.detailFrom = this.fb.group({
           phone:phone,
           name: [this.curUser.details["name"]],
-          dob: [this.curUser.details["dob"], [
+          type: [{value:this.curUser.details["type"], disabled:true}],
+          dob: [{value:this.curUser.details["dob"], disabled:true}, [
             Validators.required,
           ]],
-          gender: [this.curUser.details["gender"], [
+          gender: [{value:this.curUser.details["gender"], disabled:true}, [
             Validators.required
           ]],
-          account_info: [this.curUser.details["account_info"]],
+          date_of_joining: [{value:this.curUser.details["date_of_joining"], disabled:true}, [
+            Validators.required
+          ]],
+          date_of_leave: [{value:this.curUser.details["date_of_leave"], disabled:true}],
+          salary: [{value:this.curUser.details["salary"], disabled:true}],
+          slot_name: [{value:this.curUser.details["slot_name"], disabled:true}],
           address: [this.curUser.details["address"]],
-          district: [this.curUser.details["district"]],
-          state: [this.curUser.details["state"]],
-          country: [this.curUser.details["country"]],
-          height: [this.curUser.details["height"]],
-          weight: [this.curUser.details["weight"]]
         });
       }
     })
   }
 
   update(){
-    let phone = this.ccode.value + this.phone.value;
-    this.api.post("/patient/update", {
-      phone:phone, 
+    this.api.post("/staff/update", {
       name: this.name.value,
-      dob: this.dob.value,
-      gender: this.gender.value,
-      account_info: this.account_info.value,
       address: this.address.value,
-      district: this.district.value,
-      state: this.state.value,
-      country: this.country.value,
-      height: this.height.value,
-      weight: this.weight.value,
     }, {})
     .subscribe((res) => {
       console.log(res);
@@ -91,10 +81,4 @@ export class PatientProfileComponent implements OnInit {
   get gender(){ return this.detailFrom.get('gender'); }
   get account_info(){ return this.detailFrom.get('account_info'); }
   get address(){ return this.detailFrom.get('address'); }
-  get district(){ return this.detailFrom.get('district'); }
-  get state(){ return this.detailFrom.get('state'); }
-  get country(){ return this.detailFrom.get('country'); }
-  get height(){ return this.detailFrom.get('height'); }
-  get weight(){ return this.detailFrom.get('weight'); }
-
 }
