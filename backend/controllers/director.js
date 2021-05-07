@@ -1,4 +1,5 @@
-const { Director, Nurse, Doctor, Pathologist } = require("../models/staff");
+const { Director, Nurse, Doctor, Pathologist, Accountant, Pharmacy_keeper } = require("../models/staff");
+const { adminStr } = require("../utils/constants");
 
 let file = __filename.slice(__dirname.length + 1);
 
@@ -38,6 +39,21 @@ exports.post_addstaff = (req, res) => {
         if(req.body.type == "Pathologist"){
             var obj = new Pathologist(req.body.id);
             obj.add_pathologist();
+        }
+
+        if(req.body.type == "Accountant"){
+            var obj = new Accountant(req.body.id);
+            obj.add_accountant();
+        }
+
+        if(req.body.type == "Pharmacy_keeper"){
+            var obj = new Pharmacy_keeper(req.body.id);
+            obj.add_pharmacy_keeper();
+        }
+
+        if(req.body.type == "Admin"){
+            var obj = new Admin(req.body.id);
+            obj.add_admin();
         }
         
 
