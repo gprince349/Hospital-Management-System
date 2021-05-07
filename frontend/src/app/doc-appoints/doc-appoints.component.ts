@@ -23,4 +23,14 @@ export class DocAppointsComponent implements OnInit {
     })
   }
 
+  markComplete(id){
+
+  }
+  add_presc(id){
+
+  }
+  cancel(id){
+    
+  }
+
 }

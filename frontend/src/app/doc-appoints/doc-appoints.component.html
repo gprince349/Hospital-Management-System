@@ -1,9 +1,20 @@
 <div class="center">
-
+    <br><br>
     <div *ngIf="appoints">
-        <ul>
-            <li *ngFor="let appoint of appoints">{{appoint | json}}</li>
-        </ul>
+        <div *ngFor="let appoint of appoints">
+            <p>
+                Date: <span style="color: green;">{{appoint["date_appoint"]}}</span>
+                Status: <span style="color: green;">{{appoint["status"]}}</span>
+                DocID: <span style="color: green;">{{appoint["doctor_id"]}}</span>
+                PatID: <span style="color: green;">{{appoint["patient_id"]}}</span>
+                Slot Name: <span style="color: green;">{{appoint["slot_name"]}}</span>
+                Time: <span style="color: green;">{{appoint["start_time"]}}-{{appoint["end_time"]}}</span>
+            </p>
+            <button (click)="add_presc(appoint['id'])">Add prescription</button>
+            <button (click)="markComplete(appoint['id'])">Mark Complete</button>
+            <button (click)="cancel(appoint['id'])">Cancel Appoint</button>
+            <p></p>
+        </div>
     </div>
 
     <h4 style="color: red;">{{errMsg}}</h4>
