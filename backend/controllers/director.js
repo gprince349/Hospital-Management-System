@@ -3,14 +3,28 @@ const { adminStr } = require("../utils/constants");
 
 let file = __filename.slice(__dirname.length + 1);
 
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 exports.post_addstaff = (req, res) => {
     try{
         var obj = Director.add_staff(
             req.body.name, 
             req.body.type, 
             req.body.gender, 
-            req.body.date_of_join, 
-            req.body.date_of_leave,
+            formatDate(Date()), 
+            "",
             req.body.dob,
             req.body.salary, 
             req.body.phone, 
