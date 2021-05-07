@@ -42,6 +42,13 @@ class Test{
         .catch( err => { console.log(err)});
     }
 
+    static getPathologist(test_id){
+        const sql="select id from pathologist inner join test on test.lab_id=pathologist.lab_id where test_id=$1;"
+        const values=[test_id]
+        return pool.query(sql, values)
+    }
+
+
 };
 
 module.exports = {Lab, Test}

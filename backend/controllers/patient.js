@@ -1,6 +1,7 @@
 let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const Patient = require("../models/patient");
+const lab = require("../models/lab")
 const Real_transaction = require("../models/trans");
 const CONS = require("../utils/constants")
 const bcrypt = require("bcrypt");
@@ -111,7 +112,35 @@ exports.post_bookAppoint = (req, res) => {
     }
 }
 
-
+exports.post_testAppoint = async (req, res) => {
+    try{
+        let prescription_id=req.body.prescription_id;
+        let test_id=req.body.test_id;
+        let slot_name = req.body.slot_name;
+        let start_time = req.body.start_time;
+        // console.log(start_time);
+        let date = req.body.date;
+        dateob=new Date(date);
+        // console.log(dateob.getMonth());
+        date=dateob.getFullYear()+"-"+("0" + (dateob.getMonth() + 1)).slice(-2)+"-"+("0" + dateob.getDate()).slice(-2);
+        // console.log(date)
+        let ID = res.locals.dtoken["id"];
+        var pathologist= await lab.Test.getPathologist(test_id);
+        var pathologist_id = pathologist.rows[0].id;
+        var patient = await Patient.verify_appointment(ID, prescription_id,test_id)
+        // console.log(patient.rows.length)
+        if(patient.rows.length==0){
+            res.status(200).json({msg: "invalid prescription"});
+        }else{
+            Patient.book_test_appoint(test_id, slot_name, start_time, date, ID, pathologist_id);
+            res.status(200).json({msg: "patient book appointment success"});
+        }
+        
+    }catch(e){
+        console.log(file, e.stack);
+        res.status(200).json({error: e.message});
+    }
+}
 
 exports.post_addMoney = (req, res) => {
     try{

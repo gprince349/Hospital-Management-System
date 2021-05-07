@@ -1,1 +1,58 @@
-<p>test-appoint works!</p>
+<div *ngIf="curUser" class="center">
+    
+    <form [formGroup]="appointFrom" (ngSubmit)="book()">
+        <div>
+            
+            <mat-form-field>
+                <input matInput type="number" placeholder="Prescription ID" formControlName="prescription_id">
+                
+            </mat-form-field>
+        </div>
+        <div>
+            
+            <mat-form-field>
+                <input matInput type="number" placeholder="Test ID" formControlName="test_id">
+                
+            </mat-form-field>
+        </div>
+        <div>
+            
+            <mat-form-field>
+                <input matInput type="text" placeholder="Slot Name" formControlName="slot_name">
+                
+            </mat-form-field>
+
+            
+        </div>
+        <div>
+            
+            <mat-form-field>
+                <mat-label>Select Time</mat-label>
+                <input matInput type="time" placeholder="Start Time" formControlName="start_time">
+            </mat-form-field>
+
+            
+        </div>
+        <div>
+            
+            <mat-form-field>
+                <mat-label>Select Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <br>
+        <br>
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!(appointFrom.valid && appointFrom.dirty)">Book Appointment</button>
+
+        <mat-error>
+            {{errmsg}}
+        </mat-error>
+        <h4 style="color: green;">{{successMsg}}</h4>
+        <br><br>
+    </form>
+
+</div>
