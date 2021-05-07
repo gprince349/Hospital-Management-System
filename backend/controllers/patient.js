@@ -94,12 +94,16 @@ exports.post_update_details = async (req, res) => {
     }
 }
 
+
 exports.post_bookAppoint = (req, res) => {
     try{
         let doctor_id=req.body.doctor_id;
-        let slot_id = req.body.slot_id;
+        let slot_name = req.body.slot_name;
+        let start_time = req.body.start_time;
+        // console.log(start_time);
         let date = req.body.date;
-        Patient.book_appoint(doctor_id, slot_id, date);
+        let ID = res.locals.dtoken["id"];
+        Patient.book_appoint(doctor_id, slot_name, start_time, date, ID);
         res.status(200).json({msg: "patient book appointment success"});
     }catch(e){
         console.log(file, e.stack);

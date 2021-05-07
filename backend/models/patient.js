@@ -257,10 +257,32 @@ module.exports =  class Patient{
         return pool.query(sql,values)
     }
 
-    static book_appoint(doctor_id, slot_id, date){
-        
-        // 
+    static book_appoint(doctor_id, slot_name, start_time, date, patient_id){
+        const sql = "insert into appointment (timestamp_, date_appoint, status, doctor_id, patient_id, slot_name, slot_day, start_time, end_time) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+        let date_ob = new Date();
+        let curdate = ("0" + date_ob.getDate()).slice(-2);
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
 
+        let year = date_ob.getFullYear();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let seconds = date_ob.getSeconds();
+        let curDate=year + "-" + month + "-" + curdate;
+        let curTime=hours + ":" + minutes + ":" + seconds;
+        let day=date_ob.getDay();
+
+        var start_hour= parseInt(start_time.split(":")[0])
+        var start_mins= parseInt(start_time.split(":")[1])
+        var end_mins="0";
+        start_hour=(start_hour+1)%24;
+        
+        var end_hour=start_hour.toString();
+        var end_time=end_hour+":"+end_mins;
+        // console.log(start_hour);
+
+        var values=[curDate+" "+curTime, date, "scheduled", doctor_id, patient_id, slot_name, day, start_time,end_time]
+        console.log(values)
+        return pool.query(sql, values)
     }
 
     // static get_patient_info(id){

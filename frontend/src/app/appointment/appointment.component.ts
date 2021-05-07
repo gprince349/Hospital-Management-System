@@ -34,9 +34,11 @@ export class AppointmentComponent implements OnInit {
             Validators.required,
             Validators.pattern('^[0-9]*$')
           ]],
-          slot_id:["",[
+          slot_name:["",[
             Validators.required,
-            Validators.pattern('^[0-9]*$')
+          ]],
+          start_time:["",[
+            Validators.required,
           ]],
           date:["",[
               Validators.required
@@ -49,7 +51,8 @@ export class AppointmentComponent implements OnInit {
   book(){
     this.api.post("/patient/bookAppoint", {
       doctor_id:this.doctor_id.value,
-      slot_id:this.slot_id.value,
+      slot_name:this.slot_name.value,
+      start_time:this.start_time.value,
       date:this.date.value
     }, {})
     .subscribe((res) => {
@@ -59,8 +62,20 @@ export class AppointmentComponent implements OnInit {
     })
   }
 
+  get_slots(){
+    this.api.get("/doctor/freeslots/"+this.doctor_id.value, {
+      doctor_id:this.doctor_id.value
+    })
+    .subscribe((res) => {
+      console.log(res);
+      this.errmsg = res['error'];
+      this.successMsg = res["msg"];
+    })
+  }
+
   get doctor_id(){ return this.appointFrom.get('doctor_id');}
-  get slot_id(){ return this.appointFrom.get('slot_id');}
+  get slot_name(){ return this.appointFrom.get('slot_name');}
+  get start_time(){ return this.appointFrom.get('start_time');}
   get date(){ return this.appointFrom.get('date');}
 
 }
