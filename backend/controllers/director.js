@@ -1,4 +1,4 @@
-const { Director, Nurse, Doctor, Pathologist, Accountant, Pharmacy_keeper } = require("../models/staff");
+const { Director, Nurse, Doctor, Pathologist, Accountant, Pharmacy_keeper, Staff } = require("../models/staff");
 const { adminStr } = require("../utils/constants");
 
 let file = __filename.slice(__dirname.length + 1);
@@ -34,6 +34,12 @@ exports.post_addstaff = (req, res) => {
         obj.then(result =>{
             res.status(200).json({msg: "director addstaff success"});
         })
+
+        var id_obj = Staff.get_staff(req.body.phone)
+        id_obj.then(result=>
+            {
+                console.log(result);
+            })
 
         if(req.body.type == "Nurse"){
             var obj = new Nurse(req.body.id, req.body.dept_name, req.body.ward_num);

@@ -32,7 +32,7 @@ class Staff{
 
     /// FOR LOGIN
     static get_staff(phone){
-        var sql = 'Select * from staff where phone=$1';
+        var sql = 'Select id from staff where phone=$1';
         var values = [phone];
 
         return pool.query(sql, values)
