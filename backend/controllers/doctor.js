@@ -8,13 +8,13 @@ exports.get_freeslot = async (req, res) => {
         let docid = req.params.id;
         let slots = await Doctor.get_free_slots(docid);
         if(slots.rowCount > 0){
-            console.log(slot.rows);
+            slots.rows.forEach( r => r.dateStr = new Date(r.date).toDateString() );
             res.status(200).json(slots.rows);
         }else{
             throw Error("No free slot available");
         }
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -40,7 +40,7 @@ exports.get_appoints = (req, res) => {
         // ]);
 
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -52,7 +52,7 @@ exports.post_markComplete = (req, res) => {
             res.status(200).json({msg: "doctor markComplete success", result});
         })
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -64,7 +64,7 @@ exports.post_cancelAppoint = (req, res) => {
             res.status(200).json({msg: "doctor cancelAppoint success", result});
         })
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -96,7 +96,7 @@ exports.post_addpresc = (req, res) => {
 
 
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }
@@ -126,7 +126,7 @@ exports.post_modifypresc = (req, res) => {
 
 
     }catch(e){
-        console.log(file, e.message);
+        console.log(file, e.stack);
         res.status(200).json({error: e.message});
     }
 }

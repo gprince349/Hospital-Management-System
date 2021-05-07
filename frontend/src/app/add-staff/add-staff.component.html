@@ -1,1 +1,81 @@
-<p>add-staff works!</p>
+<div *ngIf="curUser" class="center">
+    
+    <form [formGroup]="detailFrom" (ngSubmit)="update()">
+        <h3 style="align-self:flex-start;">Basic Details</h3>
+        <div formGroupName="phone">
+            <mat-form-field>
+                <input matInput type="text" placeholder="country code" formControlName="country_code">
+                <mat-error *ngIf="ccode.invalid">
+                    country code is of type "+xx"
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="text" placeholder="phone number" formControlName="phone">
+                <mat-error *ngIf="phone.invalid">
+                    enter a 10 digit number
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field>
+            <input matInput type="text" placeholder="Your Name" formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="">
+            <mat-label>Select you DOB</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dob">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        
+        <mat-form-field appearance="">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let v of genderVal" [value]="v">
+                {{v | titlecase}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+
+		<mat-form-field>
+            <input matInput type="number" placeholder="Salary" formControlName="salary">
+        </mat-form-field>
+
+		<mat-form-field appearance="">
+            <mat-label>Slot Name</mat-label>
+            <mat-select formControlName="slot_name">
+              <mat-option *ngFor="let sn of slotNames" [value]="sn">
+                {{sn | titlecase}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+		<mat-form-field appearance="">
+            <mat-label>Staff Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option *ngFor="let st of staffType" [value]="st">
+                {{st | titlecase}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+            <input matInput type="text" placeholder="Address" formControlName="address">
+        </mat-form-field>
+		<br>
+
+        <br>
+        <br>
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!(detailFrom.valid && detailFrom.dirty)">Update Details</button>
+
+        <mat-error>
+            {{errmsg}}
+        </mat-error>
+        <h4 style="color: green;">{{successMsg}}</h4>
+        <br><br>
+    </form>
+
+</div>

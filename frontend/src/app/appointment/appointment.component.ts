@@ -27,7 +27,6 @@ export class AppointmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.get("/doctors", {}).subscribe(data => {
-      console.log(data);
       this.docList = data;
 
       this.docForm = this.fb.group({
@@ -39,7 +38,6 @@ export class AppointmentComponent implements OnInit {
   }
 
   next(){
-    console.log(this.doctor.value);
     let docid = this.doctor.value["id"];
     this.api.get(`/doctor/freeslots/${docid}`, {}).subscribe(data => {
       this.slotList = data;
@@ -59,7 +57,12 @@ export class AppointmentComponent implements OnInit {
   }
 
   checkout(){
-    this.api.post("/patient/bookAppoint", {}, {}).subscribe( res => {
+    this.api.post("/patient/bookAppoint", {
+      doctor_id: this.DOC.id,
+      slot_name: this.SLOT.slot_name,
+      start_time: this.SLOT.start_time,
+      date: this.SLOT.date
+    }, {}).subscribe( res => {
       this.errmsg = res["error"];
       this.successMsg = res["msg"];
     })

@@ -54,12 +54,10 @@ exports.get_staffs = (req, res) => {
     }
 }
 
-exports.get_doctors = (req, res) => {
+exports.get_doctors = async (req, res) => {
     try{
-        var obj = Doctor.get_doctor_list();
-        obj.then(result => {
-            res.status(200).json({msg: "public get doctors success", result});
-        })
+        var obj = await Doctor.get_doctor_list();
+        res.status(200).json(obj.rows);
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});
