@@ -396,6 +396,24 @@ class Accountant{
 
  };
 
+ class Admin{
+    constructor(id){
+                this.id = id;
+    }
+
+    add_admin(){
+        var sql = 'INSERT INTO admin VALUES ($1);';
+        
+        var values = [this.id];
+
+        pool.query(sql,values)
+        .then( res => {
+            console.log(res);
+        })
+        .catch( err => { console.log(err)})
+    };
+}
+
  class Pharmacy_keeper{
     constructor(id){
              this.id = id;
@@ -412,6 +430,7 @@ class Accountant{
         })
         .catch( err => { console.log(err)})
     };
+
 
     ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
 
@@ -480,4 +499,4 @@ class Accountant{
 
  };
 
- module.exports = {Staff, Doctor, Pathologist, Nurse, Accountant, Pharmacy_keeper, Director}
+ module.exports = {Staff, Doctor, Pathologist, Nurse, Accountant, Pharmacy_keeper, Director, Admin}

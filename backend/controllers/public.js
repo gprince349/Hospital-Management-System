@@ -2,6 +2,7 @@ let file = __filename.slice(__dirname.length + 1);
 const auth = require("../utils/auth");
 const Patient = require("../models/patient")
 const { Staff , Doctor} = require("../models/staff")
+const {Slot }= require("../models/slot")
 
 exports.get_curUserDetails = async (req, res) => {
     try{
@@ -70,6 +71,19 @@ exports.get_logout = (req, res) => {
     try{
         auth.unset_jwt_tokens(res);
         res.status(200).json({msg: "logout success"});
+    }catch(e){
+        console.log(file, e.stack);
+        res.status(200).json({error: e.message});
+    }
+}
+
+
+exports.get_slots = (req, res) => {
+    try{    
+        var obj = Slot.get_all_slot()
+        obj.then(result =>{
+            res.status(200).json({msg: "logout success", result});
+        })
     }catch(e){
         console.log(file, e.stack);
         res.status(200).json({error: e.message});

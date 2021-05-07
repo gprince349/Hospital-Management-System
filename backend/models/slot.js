@@ -16,6 +16,11 @@ class Slot{
         })
         .catch( err => { console.log(err)});
     }
+
+    static get_all_slot(){
+        var sql = 'Select name from slot';
+        return pool.query(sql)
+    }
         
 };
 
