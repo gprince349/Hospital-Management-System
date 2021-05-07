@@ -9,9 +9,11 @@ exports.post_login = async (req, res) => {
     try{
         let {phone, password} = req.body;
         let result = await Staff.get_staff(phone);
+
         if(result.rowCount > 0){
             let tup = result.rows[0];
             const verified = bcrypt.compareSync(password, tup["passwd_hash"])
+            
             if(verified){
                 // login succeeded
                 auth.set_jwt_token(res, tup["id"], tup["type"]);

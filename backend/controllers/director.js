@@ -24,12 +24,13 @@ exports.post_addstaff = async (req, res) => {
         if(res.locals.dtoken["type"] != CONST.directorStr && res.locals.dtoken["type"] != CONST.adminStr){
             throw Error("Only director and admin can access this api");
         }
+        console.log(req.body)
         var obj = await Director.add_staff(
             req.body.name, 
             req.body.type, 
             req.body.gender, 
             formatDate(Date()), 
-            "",
+            null,
             req.body.dob,
             req.body.salary, 
             req.body.phone, 
@@ -37,21 +38,23 @@ exports.post_addstaff = async (req, res) => {
             req.body.address, 
             req.body.slot_name )
 
-
-        var id_obj = Staff.get_staff(req.body.phone)
+        // console.log("last")
+        var id = 0
+        var id_obj = await Staff.get_staff(req.body.phone)
         id_obj.then(result=>
             {
-                console.log(result);
+                id = result.rows[0]['id'];
+                console.log(id) 
             })
 
-        if(req.body.type == "Nurse"){
-            var obj = new Nurse(req.body.id, req.body.dept_name, req.body.ward_num);
+        if(req.body.type == "nurse"){
+            var obj = new Nurse(id, req.body.dept_name, req.body.ward_num);
             obj.add_nurse();
         }
         
-        if(req.body.type == "Doctor"){
+        if(req.body.type == "doctor"){
             var obj = new Doctor(
-                req.body.id,
+                id,
                 req.body.dept_name,
                 req.body.fee,
                 req.body.room_no,
@@ -59,22 +62,22 @@ exports.post_addstaff = async (req, res) => {
 
             obj.add_doctor();
         }
-        if(req.body.type == "Pathologist"){
+        if(req.body.type == "pathologist"){
             var obj = new Pathologist(req.body.id);
             obj.add_pathologist();
         }
 
-        if(req.body.type == "Accountant"){
+        if(req.body.type == "accountant"){
             var obj = new Accountant(req.body.id);
             obj.add_accountant();
         }
 
-        if(req.body.type == "Pharmacy_keeper"){
+        if(req.body.type == "pharmacy_keeper"){
             var obj = new Pharmacy_keeper(req.body.id);
             obj.add_pharmacy_keeper();
         }
 
-        if(req.body.type == "Admin"){
+        if(req.body.type == "admin"){
             var obj = new Admin(req.body.id);
             obj.add_admin();
         }

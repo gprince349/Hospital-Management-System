@@ -20,7 +20,7 @@ class Staff{
     }
 
     add_staff(){
-        var sql = 'INSERT INTO staff VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);'
+        var sql = 'INSERT INTO staff (name, type, gender, date_of_joining, date_of_leave, dob, salary, phone, passwd_hash, address, slot_name)Values ($1,$2, $3,$4,$5,$6,$7,$8,$9,$10,$11);'
         var values = [ this.name, this.type, this.gender, this.date_of_join, this.date_of_leave,
             this.dob, this.salary, this.phone, this.passwd_hash, this.address, this.slot_name];
 
@@ -32,7 +32,7 @@ class Staff{
 
     /// FOR LOGIN
     static get_staff(phone){
-        var sql = 'Select id from staff where phone=$1';
+        var sql = 'Select * from staff where phone=$1';
         var values = [phone];
 
         return pool.query(sql, values)
