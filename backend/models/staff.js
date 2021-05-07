@@ -76,6 +76,12 @@ class Doctor{
     }
 
     ////////////////STATIC METHODS FOR QUERYING DATABASE ///////////////////////
+    //Get doctors list
+
+    static get_doctor_list(){
+        var sql = 'SELECT D.id,S.name, D.fee, D.dept_name from doctor as D join staff as S on(D.id = S.id)';
+        return pool.query(sql)
+    }
 
     //// SEE appointment
     static see_appointment(doc_id){

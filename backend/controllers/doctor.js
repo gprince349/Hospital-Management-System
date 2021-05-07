@@ -22,7 +22,8 @@ exports.get_appoints = (req, res) => {
 
         var obj = Doctor.see_appointment(req.body.doctor_id)
         obj.then(result=>{
-            res.status(200).json({msg: "doctor appoints success", result});
+            console.log(result)
+            res.status(200).json([{msg: "doctor appoints success"}, result.rows]);
         })
 
         // res.status(200).json([
@@ -30,6 +31,7 @@ exports.get_appoints = (req, res) => {
         //     {a:"appoint2"},
         //     {a:"appoint3"}
         // ]);
+
     }catch(e){
         console.log(file, e.message);
         res.status(200).json({error: e.message});
