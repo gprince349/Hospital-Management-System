@@ -83,6 +83,11 @@ class Doctor{
         return pool.query(sql)
     }
 
+    static get_free_slot(d_id){
+        var sql = "";
+        return pool.query(sql)
+
+    }
     //// SEE appointment
     static see_appointment(doc_id){
         var sql = 'SELECT * from appointment where doctor_id = $1;'
