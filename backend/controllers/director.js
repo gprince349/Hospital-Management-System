@@ -41,11 +41,8 @@ exports.post_addstaff = async (req, res) => {
         // console.log("last")
         var id = 0
         var id_obj = await Staff.get_staff(req.body.phone)
-        id_obj.then(result=>
-            {
-                id = result.rows[0]['id'];
-                console.log(id) 
-            })
+        id = id_obj.rows[0]['id'];
+        console.log(id) 
 
         if(req.body.type == "nurse"){
             var obj = new Nurse(id, req.body.dept_name, req.body.ward_num);

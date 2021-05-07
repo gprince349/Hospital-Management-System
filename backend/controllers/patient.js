@@ -142,7 +142,7 @@ exports.post_testAppoint = async (req, res) => {
     }
 }
 
-exports.post_addMoney = (req, res) => {
+exports.post_addMoney = async (req, res) => {
     try{
         // var patient_id = req.body.patient_id
         // var amount = req.body.amount
@@ -151,9 +151,8 @@ exports.post_addMoney = (req, res) => {
         // console.log("Added Money");
         let amount = req.body.amount;
         let ID = res.locals.dtoken["id"];
-        Patient.add_money(ID, amount);
-        Patient.add_real_transaction(ID, amount);
-        console.log("added")
+        await Patient.add_money(ID, amount);
+        await Patient.add_real_transaction(ID, amount);
         res.status(200).json({msg: "patient add money success"});
 
     }catch(e){
@@ -163,7 +162,7 @@ exports.post_addMoney = (req, res) => {
 }
 
 
-exports.post_withdrawMoney = (req, res) => {
+exports.post_withdrawMoney = async (req, res) => {
     try{
         // var patient_id = req.body.patient_id
         // var amount = req.body.amount
@@ -173,8 +172,8 @@ exports.post_withdrawMoney = (req, res) => {
         let amount = req.body.amount;
         let ID = res.locals.dtoken["id"];
         
-        Patient.withdraw_money(ID, amount);
-        Patient.add_real_transaction(ID, -1*amount);
+        await Patient.withdraw_money(ID, amount);
+        await Patient.add_real_transaction(ID, -1*amount);
         res.status(200).json({msg: "patient withdraw money success"});
 
     }catch(e){
